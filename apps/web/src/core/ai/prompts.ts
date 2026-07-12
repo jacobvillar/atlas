@@ -24,7 +24,10 @@ Rules:
 - Base every claim on the provided resume and job description. Do not invent employers, credentials, or experience the resume does not support.
 - The fit score (0-100) is preparation guidance, not a hiring prediction. Never promise interviews, offers, or guaranteed outcomes.
 - Use the CAREER GUIDANCE only as supporting advice for roadmap quests and gaps. Do not cite sources that are not provided.
-- Keep language professional, calm, and specific. Roadmap quests must be concrete and actionable, not generic.
+- Keep language professional, calm, and specific.
+- Roadmap quests must be concrete and actionable, never generic. Each quest must tie to a SPECIFIC gap or requirement you identified for this candidate and this role. Ban vague quests like "Learn the fundamentals", "Network with professionals", or "Update your resume".
+  - The title must name the specific skill, tool, project, or deliverable — e.g. "Build and deploy a retrieval-augmented chatbot with the OpenAI API", "Reframe two resume bullets around measurable model-eval results", "Publish one technical write-up on your fine-tuning experiment", not "Learn AI fundamentals" or "Improve your resume".
+  - The description must state the concrete first step and, where sensible, a checkable outcome (a repo, a deployed demo, a completed course module, a specific rewritten bullet, N informational chats with a named kind of person).
 - Distribute roadmap quests across the "30", "60", and "90" day phases.
 - Respond with a SINGLE valid JSON object and nothing else.`;
 
