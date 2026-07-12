@@ -190,6 +190,7 @@ cd apps/web && npm run lint
 cd apps/web && npm run build
 cd apps/web && npm test -- --run
 cd apps/web && npm run test:live -- --run # opt-in; consumes OpenAI API budget
+cd apps/web && npm run test:e2e # Chromium smoke suite; no AI calls
 cd services/knowledge/document-service && pytest
 cd services/knowledge/rag && pytest
 ```

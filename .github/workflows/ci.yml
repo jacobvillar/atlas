@@ -37,6 +37,12 @@ jobs:
         # No OPENAI_API_KEY and no .env.local in CI, so the two live AI
         # integration tests detect no key and report as skipped, not failed.
         run: npx vitest --run
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: End-to-end smoke test
+        # Uses dummy public env values from playwright.config.ts and never
+        # calls the AI or creates a Supabase user/data record.
+        run: npm run test:e2e
 
   document-service:
     runs-on: ubuntu-latest
