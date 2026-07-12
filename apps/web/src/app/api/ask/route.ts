@@ -54,11 +54,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Report not found." }, { status: 404 });
   }
 
-  const { data: progress } = await supabase
+  const { data: progress, error: progressError } = await supabase
     .from("roadmap_quest_progress")
     .select("quest_id, status")
     .eq("career_report_id", reportId)
     .eq("status", "completed");
+
+  // Quest progress is graceful-degrade context (like guidance): a fetch failure
+  // means the answer is generated as if no quests were completed. Surface it in
+  // logs so it isn't a silent gap; never block the answer on it.
+  if (progressError) {
+    console.warn("ask: quest progress fetch failed:", progressError.message);
+  }
 
   const completedQuestIds = new Set<string>(
     (progress ?? []).map((row) => row.quest_id as string),

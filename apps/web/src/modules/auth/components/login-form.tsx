@@ -4,9 +4,18 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/core/supabase/browser";
 
-function safeRedirectPath(path: string | undefined): string {
-  if (path && path.startsWith("/") && !path.startsWith("//") && !path.startsWith("/\\")) {
-    return path;
+export function safeRedirectPath(path: string | undefined): string {
+  // Only allow same-origin internal paths. Parsing against a dummy base rejects
+  // protocol-relative (`//host`), backslash tricks (`/\host` → `//host`), and
+  // absolute/other-scheme URLs — anything that resolves off-origin falls through.
+  if (!path || !path.startsWith("/")) return "/dashboard";
+  try {
+    const url = new URL(path, "http://internal.invalid");
+    if (url.origin === "http://internal.invalid") {
+      return url.pathname + url.search + url.hash;
+    }
+  } catch {
+    // malformed path — fall through to the safe default
   }
   return "/dashboard";
 }
