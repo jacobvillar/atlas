@@ -30,6 +30,40 @@ Agents should read these files before major changes:
 7. Update docs only when they describe current behavior or decisions.
 8. Do not commit unless the user explicitly asks.
 
+## Commit Message Convention
+
+Use Conventional Commits for all Atlas commits:
+
+```text
+type(scope): short imperative description
+```
+
+Use these types:
+
+- `feat` for new product or system capabilities.
+- `fix` for bug fixes.
+- `docs` for documentation-only changes.
+- `test` for tests.
+- `refactor` for behavior-preserving code changes.
+- `chore` for tooling, dependency, or repo maintenance.
+- `ci` for GitHub Actions or deployment automation.
+
+Use specific Atlas scopes such as `public-site`, `auth`, `dashboard`, `analysis`, `document-service`, `rag`, `ai`, `reports`, `roadmap`, `ask-atlas`, `supabase`, `readme`, `docs`, or `ci`.
+
+Good examples:
+
+```text
+docs(plan): finalize Atlas MVP plan
+docs(readme): align overview with architecture plan
+feat(document-service): add Docling extraction endpoint
+feat(rag): load curated career guidance chunks
+feat(ask-atlas): add report-specific follow-up chat
+test(supabase): cover report ownership policies
+ci(actions): add MVP validation checks
+```
+
+Avoid vague messages such as `update`, `changes`, `fix stuff`, or `initial commit`.
+
 ## ECC-Inspired Practices
 
 Atlas can borrow useful practices from [affaan-m/ecc](https://github.com/affaan-m/ecc) without adding ECC as a dependency.

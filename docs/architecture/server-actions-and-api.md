@@ -21,9 +21,7 @@ Response:
   "fileName": "resume.pdf",
   "fileType": "application/pdf",
   "text": "string",
-  "markdown": "string",
-  "preview": "string",
-  "pageCount": 2
+  "markdown": "string"
 }
 ```
 
@@ -32,7 +30,7 @@ Rules:
 - Require authenticated Supabase session.
 - Validate MIME type and size before proxying.
 - Call the document service from server-side code only.
-- Save resume metadata and preview under the current user.
+- Save resume metadata (no preview) under the current user.
 - Return extracted text for immediate user review.
 - Do not store the uploaded file or full extracted text.
 
@@ -200,15 +198,13 @@ Response:
   "fileName": "resume.pdf",
   "fileType": "application/pdf",
   "text": "string",
-  "markdown": "string",
-  "preview": "string",
-  "pageCount": 2
+  "markdown": "string"
 }
 ```
 
 Rules:
 
-- Require internal API key from the Next.js app.
+- Require an internal API key from the Next.js app, and fail closed: if no key is configured, reject every request. Check declared `Content-Length` before buffering the body.
 - Never call this service directly from browser code.
 - Reject unsupported MIME types.
 - Reject files over the configured size limit.

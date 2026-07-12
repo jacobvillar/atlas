@@ -48,7 +48,6 @@ The web app should isolate provider logic under:
 
 ```text
 apps/web/src/core/ai/
-  gateway.ts
   prompts.ts
   schemas.ts
   openai.ts

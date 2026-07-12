@@ -1,6 +1,8 @@
 # Atlas Docs
 
-Atlas documentation is organized around the graded project deliverables and the engineering plan.
+Atlas is a gamified career coach, roadmap, and tracker: it turns career preparation into an adventure where you level up in real life, build real skills, grow your professional "aura," and evolve with every quest you complete. For v1 the analysis engine stays general while the curated guidance, presets, and capstone demo are themed around AI / ML engineering readiness (broader job market is v2).
+
+This documentation is organized around the graded project deliverables and the engineering plan.
 
 ## Start Here
 

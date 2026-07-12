@@ -2,7 +2,11 @@
 
 ## Product Summary
 
-Atlas is an AI-powered career readiness app for fresh graduates, early-career professionals, and career shifters. It turns a resume PDF/DOCX and a target job description into a structured role-fit report, personalized roadmap quests, and a focused follow-up chat called Ask Atlas.
+Atlas is a gamified, AI-powered career coach, roadmap, and tracker. It turns career preparation into an adventure: users complete quests to level up in real life, build real skills, grow their professional "aura" (presence and reputation), and evolve toward their target role. Atlas turns a resume PDF/DOCX and a target role into a structured role-fit report, a personalized quest roadmap with XP and readiness levels, and a focused follow-up chat called Ask Atlas.
+
+v1 is themed around AI / ML engineering readiness (AI Engineer, ML Engineer, LLM / Applied-AI Engineer, MLOps Engineer). This is a soft scope: the analysis engine stays general and accepts any resume and any job description; only the curated RAG guidance, career-path presets, example copy, and the capstone demo center on AI engineering. The broad job market (all roles, non-tech) is v2.
+
+Tone stays credible where it counts: adventure framing lives in the landing page, onboarding, and quest board, while the readiness report itself stays calm and professional. The fit score is guidance, not a hiring prediction, and rewards, XP, and levels are in-app progression only.
 
 ## MVP Scope
 
@@ -12,8 +16,9 @@ Atlas v1 includes:
 - Resume upload for PDF and DOCX files.
 - Python FastAPI document service using Docling for resume text extraction.
 - User review/edit step for extracted resume text.
-- Pasted target job description text.
-- RAG over a small curated career guidance knowledge base.
+- Two target-role input modes into one pipeline, with the job description primary: (1) paste a target job description, or (2) choose/enter a target role as a career path, from which Atlas synthesizes a representative role profile stored as the report's job description text.
+- Gamified progression: quests as the core action unit on a quest board, XP earned per completed quest, readiness levels / rank that rise with XP, in-app rewards (XP, rank-ups, badges, "aura" flourishes), and a "today's quests" view layered on the 30/60/90-day roadmap.
+- RAG over a small curated career guidance knowledge base, themed to AI engineering in v1.
 - OpenAI `gpt-4o-mini` for report generation and Ask Atlas.
 - OpenAI `text-embedding-3-small` for career guidance embeddings.
 - Structured resume evidence saved from the analysis, without storing the full raw resume text.
@@ -31,7 +36,11 @@ Atlas v1 does not include:
 - Long-term storage of raw resume files.
 - Long-term storage of full raw resume text.
 - Long-term chat memory beyond messages attached to a saved report.
-- Streaks, XP economy, leaderboards, competitive leagues, push notifications, mascot-led nudges, daily lessons, or generic curriculum paths.
+- Leaderboards, competitive leagues, or ranking users against each other.
+- Social or public sharing of career data.
+- Streak-loss or countdown-pressure mechanics that create anxiety.
+- Push notifications, mascot-led reminders, generic daily lessons, or generic curriculum paths.
+- The broad, non-tech job market (all roles), which is v2.
 
 ## Inputs
 
@@ -54,8 +63,10 @@ Atlas returns a structured report with:
 - `gaps`: missing or weak areas.
 - `priorityActions`: highest-impact next actions.
 - `resumeSuggestions`: concrete bullet and positioning suggestions.
-- `roadmapQuests`: personalized quest items with stable `questId`, `phase`, `category`, action title, reason, evidence output, time estimate, and completion status.
-- `milestoneBadges`: computed badge labels based on completed quest categories.
+- `roadmapQuests`: personalized quest items with stable `questId`, `phase`, `category`, action title, reason, evidence output, time estimate, XP value, and completion status.
+- `readinessLevel`: current readiness level / rank derived from earned XP and completed quests.
+- `xpTotal`: cumulative XP earned from completed quests.
+- `milestoneBadges`: computed badge labels based on completed quest categories, framed within the leveling system.
 - `projectSuggestion`: one portfolio project aligned to the role.
 - `sourceTitles`: career guidance sources retrieved through RAG.
 - `disclaimer`: career guidance disclaimer.
@@ -106,9 +117,8 @@ services/knowledge/rag/data/seed/*.md
 
 ## Data Model
 
-Core Supabase tables:
+Core Supabase tables (identity lives in `auth.users`; no `profiles` table in v1):
 
-- `profiles`
 - `resume_documents`
 - `career_reports`
 - `roadmap_quest_progress`
@@ -117,7 +127,7 @@ Core Supabase tables:
 
 Privacy rules:
 
-- Store resume metadata and a short extracted text preview.
+- Store resume metadata only (file name, type, status); do not store an extracted text preview.
 - Do not store uploaded resume files in v1.
 - Do not store full raw resume text in v1.
 - Store a structured resume evidence summary generated during analysis so Ask Atlas can answer later without raw resume storage.
@@ -147,19 +157,20 @@ Document service API:
 3. Document service rejects unsupported files and files over the configured size limit.
 4. Document service extracts resume content with Docling and discards the file.
 5. User can review and edit extracted resume text before analysis.
-6. User can paste a target job description.
-7. App validates that resume text and job description text are present and long enough.
+6. User can provide a target role via either input mode: paste a target job description, or choose/enter a target role as a career path from which Atlas synthesizes a representative role profile.
+7. App validates that resume text and job description text (pasted or synthesized) are present and long enough.
 8. App retrieves relevant career guidance chunks through Supabase `pgvector`.
 9. App sends the request only to server-side OpenAI calls.
 10. AI response is validated against the expected output shape.
 11. Generated structured resume evidence and report are saved for the authenticated user.
 12. App renders the result as a readiness dashboard, not only a long text answer.
-13. Dashboard shows fit score, strengths, gaps, priority actions, resume suggestions, 30/60/90-day roadmap quests, progress, next best quest, and milestone badges.
+13. Dashboard shows fit score, strengths, gaps, priority actions, resume suggestions, 30/60/90-day roadmap quests, a quest board with a "today's quests" view, progress, earned XP, readiness level / rank, next best quest, and milestone badges.
 14. Ask Atlas becomes available only after a report is generated.
 15. Ask Atlas answers follow-up questions using the saved report, structured resume evidence, quest progress, and retrieved guidance.
 16. User can view saved reports.
-17. User can mark roadmap quests complete or incomplete.
-18. User can copy or export a report as Markdown.
+17. User can mark roadmap quests complete or incomplete; completing a quest awards XP and can raise the readiness level.
+18. Earned XP, readiness level, and rewards are in-app progression only and never imply guaranteed interviews, offers, or hiring outcomes.
+19. User can copy or export a report as Markdown.
 
 ## Non-Functional Requirements
 
@@ -174,13 +185,15 @@ Document service API:
 ## Acceptance Criteria
 
 - Given a signed-in user and a valid PDF/DOCX resume, Atlas extracts text and shows it for review.
-- Given valid reviewed resume text and job description, Atlas returns and saves a complete report.
+- Given valid reviewed resume text and a target role from either input mode, Atlas returns and saves a complete report.
+- Given a career-path target role with no pasted job description, Atlas synthesizes a representative role profile and proceeds.
 - Given missing resume text, Atlas shows a validation error.
-- Given missing job description text, Atlas shows a validation error.
-- The generated report includes fit score, strengths, gaps, roadmap quests, resume suggestions, and source titles.
-- The dashboard includes a clear review state and 30/60/90-day roadmap quest UI.
-- Roadmap quest completion persists for the authenticated user and report.
-- Milestone badges reflect completed quest categories and do not imply hiring outcomes.
+- Given no target role from either input mode, Atlas shows a validation error.
+- The generated report includes fit score, strengths, gaps, roadmap quests with XP values, readiness level, resume suggestions, and source titles.
+- The dashboard includes a clear review state, a 30/60/90-day roadmap quest UI, a quest board, and a "today's quests" view.
+- Roadmap quest completion persists for the authenticated user and report, and awards XP toward the readiness level.
+- Milestone badges reflect completed quest categories, sit within the leveling system, and do not imply hiring outcomes.
+- XP, readiness levels, and rewards are in-app progression only; no leaderboards, competitive ranking, or public sharing of career data.
 - Ask Atlas is disabled until a report exists.
 - Ask Atlas saves user and assistant messages linked to the report.
 - A user cannot read another user's reports or Ask Atlas messages.

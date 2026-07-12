@@ -7,7 +7,7 @@ Atlas handles sensitive career materials such as resumes and job descriptions. V
 - Require login before analysis.
 - Do not store uploaded resume files.
 - Do not store full raw resume text.
-- Store resume metadata and a short extracted text preview only.
+- Store resume metadata only (file name, type, status); do not store an extracted text preview.
 - Store structured resume evidence extracted during analysis so saved Ask Atlas can work without raw resume storage.
 - Store generated report JSON because it is the user's saved product output.
 - Store roadmap quest progress because it is part of the user's saved product output.

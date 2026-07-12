@@ -38,9 +38,7 @@ Response:
   "fileName": "resume.pdf",
   "fileType": "application/pdf",
   "text": "string",
-  "markdown": "string",
-  "preview": "string",
-  "pageCount": 2
+  "markdown": "string"
 }
 ```
 
@@ -52,7 +50,7 @@ Response:
 
 ## Web Proxy Route
 
-The browser uploads resumes to the Next.js route `POST /api/extract-resume`. That route verifies the Supabase session, validates the file, forwards the upload to the document service with `DOCUMENT_SERVICE_API_KEY`, saves only metadata and preview, and returns extracted text for immediate review.
+The browser uploads resumes to the Next.js route `POST /api/extract-resume`. That route verifies the Supabase session, validates the file, forwards the upload to the document service with `DOCUMENT_SERVICE_API_KEY`, saves only metadata, and returns extracted text for immediate review.
 
 ## Deployment
 

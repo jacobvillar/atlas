@@ -45,7 +45,7 @@ Implementation impact:
 - Browser uploads to Next.js, not directly to the Python service.
 - Next.js validates auth, file type, and file size.
 - Next.js calls the document service with `DOCUMENT_SERVICE_API_KEY`.
-- Only resume metadata and preview are saved.
+- Only resume metadata (no preview) is saved.
 
 ### 4. One Roadmap Quest Source Of Truth
 

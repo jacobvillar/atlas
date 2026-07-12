@@ -7,7 +7,7 @@ Atlas v1 stores user-owned product outputs, not raw source documents.
 Stored:
 
 - User profile metadata from Supabase Auth.
-- Resume metadata and a short extracted text preview.
+- Resume metadata only (file name, type, status).
 - Target job description text attached to a saved report.
 - Structured resume evidence extracted during analysis.
 - Generated report JSON and fit score.

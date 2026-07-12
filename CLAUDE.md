@@ -2,7 +2,9 @@
 
 ## Project
 
-Atlas is a Week 4 AI-powered web application capstone. It helps authenticated users compare a resume against a target job description, understand role readiness, and generate practical roadmap quests.
+Atlas is a Week 4 AI-powered web application capstone: a gamified career coach, roadmap, and tracker. It turns career preparation into an adventure. Authenticated users compare a resume against a target role, understand role readiness, and complete roadmap quests that let them level up in real life, build real skills, grow their professional "aura" (presence and reputation), and evolve toward their target role.
+
+v1 is themed around AI / ML engineering readiness (AI Engineer, ML Engineer, LLM / Applied-AI Engineer, MLOps Engineer). This is a soft scope: the analysis engine stays general and accepts any resume and any job description; only the curated content, RAG guidance, career-path presets, and demo center on AI engineering. The broad job market (all roles, non-tech) is explicitly v2.
 
 Tagline: "Map your next career move."
 
@@ -33,22 +35,26 @@ atlas/
 
 ## Product Rules
 
-- MVP flow: sign in, upload or paste one resume, paste one job description, generate one saved readiness report, ask report-specific follow-up questions.
-- Target users are fresh graduates, early-career professionals, and career shifters across the broader job market, not only tech roles.
+- MVP flow: sign in, upload or paste one resume, provide a target role via one of two input modes, generate one saved readiness report, complete quests to earn XP and level up, ask report-specific follow-up questions.
+- Two input modes feed one pipeline, with the job description primary: (1) paste a target job description (precise; hero flow), or (2) choose/enter a target role as a career path, and Atlas synthesizes a representative role profile stored as the report's job description text.
+- v1 target roles are AI / ML engineering roles (AI Engineer, ML Engineer, LLM / Applied-AI Engineer, MLOps Engineer). This is a soft scope: the analysis engine stays general and accepts any resume and job description; only curated RAG guidance, career-path presets, example copy, and the capstone demo are themed to AI engineering. The broad job market (all roles, non-tech) is v2. Do not hard-reject non-AI targets in code.
 - Require Supabase authentication before analysis.
 - Support PDF and DOCX resume upload through the document service; paste input can remain as a fallback.
-- Generate a readiness dashboard with fit score, strengths, gaps, resume improvements, and 30/60/90-day roadmap quests.
+- Generate a readiness dashboard with fit score, strengths, gaps, resume improvements, and a 30/60/90-day roadmap quest backbone.
+- Gamification is in scope: quests are the core action unit on a quest board; completing quests earns XP; accumulated XP raises the user's readiness level / rank so they "evolve" and level up; rewards for quests and milestones are in-app progression only (XP, rank-ups, badges, cosmetic and "aura" flourishes).
+- Surface a "today's quests" view layered on top of the 30/60/90-day roadmap: the roadmap stays the structure while "today's quests" pulls the next actionable quests forward so it feels like a daily adventure, without any streak-loss or countdown pressure.
+- "Aura" means professional presence and reputation, used as playful progression flavor.
 - Allow users to mark roadmap quests complete or incomplete.
-- Show professional milestone badges computed from completed quest categories.
+- Show professional milestone badges computed from completed quest categories, framed within the leveling system.
 - Ask Atlas is available only after a report exists and uses saved structured resume evidence, job description/report context, quest progress, and retrieved career guidance as context.
-- Treat the fit score as guidance, not a hiring prediction.
+- Treat the fit score as guidance, not a hiring prediction. Rewards, XP, and levels are in-app progression only and never imply guaranteed interviews, offers, or hiring outcomes.
 - Do not add payments, LinkedIn scraping, job-board integrations, automated applications, or hiring guarantees in v1.
 
 ## Privacy and Data Rules
 
 - Do not store uploaded resume files.
 - Do not store full raw resume text.
-- Store only user-owned resume metadata, an extracted preview, structured resume evidence, the pasted job description, report JSON, fit score, roadmap quest progress, and Ask Atlas messages.
+- Store only user-owned resume metadata, structured resume evidence, the pasted job description, report JSON, fit score, roadmap quest progress, and Ask Atlas messages. No extracted text preview is stored.
 - Do not embed private user resumes, job descriptions, or Ask Atlas messages into the shared RAG knowledge base.
 - Curated career guidance Markdown files are the only MVP RAG source.
 - Never log raw resume text, job descriptions, OpenAI keys, Supabase service-role keys, or generated private report content.
@@ -64,7 +70,8 @@ atlas/
 - Use Zod or an equivalent schema validator for form and API validation.
 - Dashboard sections should be scannable: readiness score, role requirements, matched strengths, priority gaps, resume bullet rewrites, 30/60/90 roadmap quests, progress, milestone badges, sources, and Ask Atlas.
 - Keep UI copy grounded. Do not promise job offers, interview callbacks, or guaranteed outcomes.
-- Follow the Atlas visual direction: professional, calm, white or soft gray surfaces, restrained blue accents, thin borders, 6-12px radius, clear spacing.
+- Tone ceiling: adventure hype ("level up in real life," "aura," "evolve") lives in the landing page, onboarding, and quest board. The readiness report itself stays calm, credible, and professional; keep the fit score, gaps, and resume suggestions free of hype. The fit score is guidance, not a hiring prediction or guarantee.
+- Follow the Atlas visual direction: professional, calm, white or soft gray surfaces, restrained blue accents, thin borders, 6-12px radius, clear spacing. Gamified surfaces (quest board, level-up moments) may add restrained progression flourishes without becoming loud.
 - Public pages should include Home, Use Cases, Privacy, FAQ, About, Login, and Sign up for free.
 - Login copy should use `Welcome back` and `Continue your career roadmap.`
 - Signup copy should use `Start mapping your next career move` and explain that accounts save reports, quests, and Ask Atlas chats.
@@ -118,6 +125,55 @@ atlas/
 - Update documentation when behavior, architecture, data storage, or security assumptions change.
 - Do not commit unless the user explicitly asks.
 
+## Commit Message Rules
+
+Use Conventional Commits:
+
+```text
+type(scope): short imperative description
+```
+
+Preferred types:
+
+- `feat`: new user-facing or system capability
+- `fix`: bug fix
+- `docs`: documentation-only change
+- `test`: tests only
+- `refactor`: behavior-preserving code change
+- `chore`: tooling, dependency, or repo maintenance
+- `ci`: GitHub Actions or deployment automation
+
+Preferred Atlas scopes:
+
+- `public-site`
+- `auth`
+- `dashboard`
+- `analysis`
+- `document-service`
+- `rag`
+- `ai`
+- `reports`
+- `roadmap`
+- `ask-atlas`
+- `supabase`
+- `readme`
+- `docs`
+- `ci`
+
+Examples:
+
+```text
+docs(plan): finalize Atlas MVP plan
+docs(readme): align overview with architecture plan
+feat(document-service): add Docling extraction endpoint
+feat(rag): load curated career guidance chunks
+feat(ask-atlas): add report-specific follow-up chat
+test(supabase): cover report ownership policies
+ci(actions): add MVP validation checks
+```
+
+Keep commit descriptions lowercase, imperative, and under 72 characters where practical. Do not use vague messages like `update files`, `fix stuff`, or `initial changes`.
+
 ## ECC-Inspired Practices
 
 - Use ECC as inspiration for agent operating discipline: reusable rules, research-first development, security checks, and repeatable verification.
@@ -143,6 +199,9 @@ cd services/knowledge/rag && pytest
 - Do not store uploaded resume files or full raw resume text.
 - Do not expose secrets in client bundles, logs, docs, screenshots, or demo recordings.
 - Do not add broad abstractions before the MVP flow works.
-- Do not make Atlas a generic chatbot; the product is a structured career-readiness workflow with Ask Atlas as a follow-up feature.
-- Do not add streaks, XP economy, leaderboards, competitive leagues, push notifications, mascot-led nudges, daily lessons, or generic curriculum in v1.
+- Do not make Atlas a generic chatbot; the product is a structured, gamified career-readiness workflow with Ask Atlas as a follow-up feature.
+- Do not add leaderboards, competitive leagues, or ranking users against each other.
+- Do not add social or public sharing of career data.
+- Do not add streak-loss mechanics or countdown pressure that create anxiety. (Progression via XP, levels, and "today's quests" is in scope; loss/countdown pressure is not.)
+- Do not add push notifications, mascot-led reminders, generic daily lessons, or generic curriculum paths.
 - Do not copy Better-ed positioning language into Atlas docs.

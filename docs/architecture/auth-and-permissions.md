@@ -36,7 +36,7 @@ Email/password auth is enough for v1 unless a later implementation decision adds
 
 - Do not store uploaded resume files in v1.
 - Do not store full raw resume text in v1.
-- Store only resume metadata and a short extracted text preview.
+- Store only resume metadata (file name, type, status), not an extracted text preview.
 - Store generated reports and Ask Atlas messages because they are user-owned product artifacts.
 - Store roadmap quest progress because it is a user-owned product artifact.
 - Do not embed private resumes into the RAG knowledge base in v1.

@@ -1,0 +1,30 @@
+# Render Blueprint for the Atlas document service (FastAPI + Docling).
+# Deploy: Render dashboard → New → Blueprint → select this repo.
+#
+# After the service is live:
+#   1. In the Render dashboard, set DOCUMENT_SERVICE_API_KEY (sync:false below)
+#      to the value in your local .env — the SAME value must go in Vercel.
+#   2. Copy the service URL into Vercel's DOCUMENT_SERVICE_URL.
+#
+# Note: Docling pulls in heavy ML deps (torch + models). The free plan (512 MB)
+# may run out of memory on build/first extraction; upgrade `plan` to `starter`
+# if the service OOMs or cold starts fail.
+services:
+  - type: web
+    name: atlas-document-service
+    runtime: python
+    plan: free
+    rootDir: services/knowledge/document-service
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      - key: MAX_UPLOAD_MB
+        value: "5"
+      # Shared secret with the web app. Set this in the Render dashboard to the
+      # value generated in your local .env; the same value goes in Vercel.
+      - key: DOCUMENT_SERVICE_API_KEY
+        sync: false

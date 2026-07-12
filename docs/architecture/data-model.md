@@ -2,16 +2,9 @@
 
 Atlas stores user-owned reports and a small curated career guidance knowledge base. It does not store raw resume files or full raw resume text in v1.
 
-## Profiles
+## Identity
 
-```sql
-create table profiles (
-  id uuid primary key references auth.users(id) on delete cascade,
-  email text not null,
-  full_name text,
-  created_at timestamptz not null default now()
-);
-```
+There is no `profiles` table in v1. `auth.users` already holds identity and email, and no feature reads additional profile fields. Add a `profiles` table (with an `auth.users` insert trigger) only when a feature needs profile data.
 
 ## Resume Documents
 
@@ -23,7 +16,6 @@ create table resume_documents (
   user_id uuid not null references auth.users(id) on delete cascade,
   file_name text not null,
   file_type text not null,
-  extracted_text_preview text,
   extraction_status text not null default 'completed',
   created_at timestamptz not null default now()
 );
@@ -40,7 +32,6 @@ create table career_reports (
   resume_document_id uuid references resume_documents(id) on delete set null,
   target_role text,
   job_description_text text not null,
-  job_requirements_summary text,
   resume_evidence_json jsonb not null default '{}'::jsonb,
   report_json jsonb not null,
   fit_score integer not null check (fit_score >= 0 and fit_score <= 100),
@@ -145,7 +136,8 @@ create table career_resource_chunks (
 ```sql
 create or replace function match_career_resources(
   query_embedding vector(1536),
-  match_count int default 6
+  match_count int default 6,
+  min_similarity float default 0.2
 )
 returns table (
   id text,
@@ -165,6 +157,7 @@ as $$
     chunk_text,
     1 - (embedding <=> query_embedding) as similarity
   from career_resource_chunks
+  where 1 - (embedding <=> query_embedding) >= min_similarity
   order by embedding <=> query_embedding
   limit match_count;
 $$;
@@ -174,12 +167,11 @@ $$;
 
 Enable RLS for user-owned tables:
 
-- `profiles`
 - `resume_documents`
 - `career_reports`
 - `roadmap_quest_progress`
 - `ask_atlas_messages`
 
-Users can select, insert, update, and delete only rows where `user_id = auth.uid()` or `id = auth.uid()` for `profiles`.
+Users can select, insert, update, and delete only rows where `user_id = auth.uid()`.
 
 `career_resource_chunks` is read-only to authenticated users. Writes are performed only by an admin ingestion script using a service role key.
