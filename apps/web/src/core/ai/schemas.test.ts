@@ -1,0 +1,57 @@
+import { describe, it, expect } from "vitest";
+import { analysisOutputSchema } from "./schemas";
+
+const valid = {
+  resumeEvidence: {
+    summary: "Career shifter moving into data analysis.",
+    skills: ["Excel", "SQL"],
+    experience: [{ title: "Operations Associate", highlights: ["Built weekly reports"] }],
+    education: ["BS Biology"],
+  },
+  report: {
+    fitScore: 55,
+    summary: "Transferable skills present; needs analytics depth.",
+    roleRequirements: [{ requirement: "SQL proficiency", status: "met" }],
+    strengths: ["Process improvement"],
+    gaps: [{ area: "Statistics", detail: "No formal stats background." }],
+    resumeSuggestions: [{ area: "Impact", suggestion: "Add measurable outcomes." }],
+    roadmapQuests: [
+      { title: "SQL course", description: "Finish an intermediate SQL course.", phase: "30", category: "skills" },
+      { title: "Dashboard project", description: "Build a public dashboard.", phase: "60", category: "projects" },
+      { title: "Networking", description: "Reach out to 5 analysts.", phase: "90", category: "networking" },
+    ],
+  },
+};
+
+describe("analysisOutputSchema", () => {
+  it("accepts a well-formed analysis payload", () => {
+    expect(analysisOutputSchema.safeParse(valid).success).toBe(true);
+  });
+
+  it("rejects a fit score above 100", () => {
+    const bad = { ...valid, report: { ...valid.report, fitScore: 150 } };
+    expect(analysisOutputSchema.safeParse(bad).success).toBe(false);
+  });
+
+  it("rejects an unknown quest category", () => {
+    const bad = {
+      ...valid,
+      report: {
+        ...valid.report,
+        roadmapQuests: [
+          { title: "x", description: "y", phase: "30", category: "dancing" },
+          ...valid.report.roadmapQuests,
+        ],
+      },
+    };
+    expect(analysisOutputSchema.safeParse(bad).success).toBe(false);
+  });
+
+  it("rejects fewer than three quests", () => {
+    const bad = {
+      ...valid,
+      report: { ...valid.report, roadmapQuests: valid.report.roadmapQuests.slice(0, 1) },
+    };
+    expect(analysisOutputSchema.safeParse(bad).success).toBe(false);
+  });
+});
