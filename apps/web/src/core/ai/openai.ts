@@ -1,13 +1,16 @@
 import OpenAI from "openai";
 import {
   analysisOutputSchema,
+  askOutputSchema,
   roleProfileOutputSchema,
   type AnalysisOutput,
   type GuidanceChunk,
 } from "./schemas";
 import {
   buildAnalysisMessages,
+  buildAskMessages,
   buildRoleProfileMessages,
+  type AskMessagesArgs,
   type ChatMessage,
 } from "./prompts";
 import type { AnalyzeInput } from "@/core/validation/analyze";
@@ -135,4 +138,46 @@ export async function synthesizeRoleProfile(targetRole: string): Promise<string>
   }
 
   throw new Error(`Role profile output failed validation: ${lastError}`);
+}
+
+// Ask Atlas follow-up (ATLAS-010): answers one report-specific question grounded
+// in the report owner's own stored data plus retrieved guidance. Validates the
+// model output against askOutputSchema and retries once with a corrective
+// message, mirroring generateAnalysis. Returns just the answer string.
+export async function answerQuestion(args: AskMessagesArgs): Promise<string> {
+  const messages = buildAskMessages(args);
+  let lastError = "";
+
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const attemptMessages =
+      attempt === 0
+        ? messages
+        : [
+            ...messages,
+            {
+              role: "user" as const,
+              content: `Your previous response was not valid. Error: ${lastError}. Respond again with a single valid JSON object matching the required shape exactly.`,
+            },
+          ];
+
+    const raw = await completeJson(attemptMessages);
+
+    let parsedJson: unknown;
+    try {
+      parsedJson = JSON.parse(raw);
+    } catch {
+      lastError = "Response was not valid JSON.";
+      continue;
+    }
+
+    const result = askOutputSchema.safeParse(parsedJson);
+    if (result.success) {
+      return result.data.answer;
+    }
+    lastError = result.error.issues
+      .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
+      .join("; ");
+  }
+
+  throw new Error(`Ask output failed validation: ${lastError}`);
 }

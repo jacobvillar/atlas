@@ -83,6 +83,14 @@ export const roleProfileOutputSchema = z.object({
 });
 export type RoleProfileOutput = z.infer<typeof roleProfileOutputSchema>;
 
+// Ask Atlas follow-up (ATLAS-010): the model answers one report-specific
+// question grounded in the report owner's own stored data plus retrieved
+// guidance. A single answer string is all that is returned and saved.
+export const askOutputSchema = z.object({
+  answer: z.string().min(1).max(4000),
+});
+export type AskOutput = z.infer<typeof askOutputSchema>;
+
 export type ResumeEvidence = z.infer<typeof resumeEvidenceSchema>;
 export type QuestDraft = z.infer<typeof questDraftSchema>;
 export type ReportDraft = z.infer<typeof reportDraftSchema>;

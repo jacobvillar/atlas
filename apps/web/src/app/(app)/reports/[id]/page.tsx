@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/core/supabase/server";
 import { getReportForUser } from "@/modules/reports/queries/get-report";
+import { getAskMessages } from "@/modules/ask-atlas/queries/get-messages";
 import { ReadinessDashboard } from "@/modules/readiness-report/components/readiness-dashboard";
 
 interface ReportPageProps {
@@ -33,6 +34,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
   }
 
   const { report, completedQuestIds } = result;
+  const askMessages = await getAskMessages(supabase, id);
 
   return (
     <div className="min-h-full bg-background-secondary">
@@ -57,6 +59,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
           createdAt={report.created_at}
           reportId={report.id}
           initialCompletedQuestIds={Array.from(completedQuestIds)}
+          askMessages={askMessages}
         />
       </main>
     </div>

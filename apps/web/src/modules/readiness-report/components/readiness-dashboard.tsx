@@ -2,6 +2,8 @@ import type { ReportJson } from "@/core/ai/schemas";
 import { ReportSection } from "./report-section";
 import { CopyMarkdownButton } from "./copy-markdown-button";
 import { InteractiveRoadmap } from "@/modules/roadmap/components/interactive-roadmap";
+import { AskAtlasPanel } from "@/modules/ask-atlas/components/ask-atlas-panel";
+import type { AskMessage } from "@/modules/ask-atlas/queries/get-messages";
 import { reportToMarkdown } from "../export/markdown";
 
 const STATUS_STYLES: Record<
@@ -27,6 +29,7 @@ interface ReadinessDashboardProps {
   createdAt: string;
   reportId: string;
   initialCompletedQuestIds: string[];
+  askMessages: AskMessage[];
 }
 
 // Scannable rendering of a saved readiness report. Quest completion,
@@ -38,6 +41,7 @@ export function ReadinessDashboard({
   createdAt,
   reportId,
   initialCompletedQuestIds,
+  askMessages,
 }: ReadinessDashboardProps) {
   const markdown = reportToMarkdown({ ...report, createdAt });
   const createdLabel = new Date(createdAt).toLocaleDateString(undefined, {
@@ -192,6 +196,8 @@ export function ReadinessDashboard({
       </ReportSection>
 
       <p className="text-xs text-foreground-muted">{report.disclaimer}</p>
+
+      <AskAtlasPanel reportId={reportId} initialMessages={askMessages} />
     </div>
   );
 }
