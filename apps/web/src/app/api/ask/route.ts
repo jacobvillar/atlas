@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/core/supabase/server";
 import { askInputSchema } from "@/core/validation/ask";
-import { retrieveGuidance } from "@/core/rag/retrieve";
-import { answerQuestion } from "@/core/ai/openai";
+import { answerQuestionAgentic } from "@/core/ai/ask-agent";
 import type { ReportJson, ResumeEvidence } from "@/core/ai/schemas";
 
 // POST /api/ask — authenticated Ask Atlas follow-up (ATLAS-010). Answers one
@@ -65,18 +64,17 @@ export async function POST(request: Request) {
     (progress ?? []).map((row) => row.quest_id as string),
   );
 
-  // Guidance is retrieved for the QUESTION and degrades to [] on any failure.
-  const guidance = await retrieveGuidance(question);
-
+  // The agent retrieves guidance on demand via its retrieve_guidance tool, so no
+  // eager pre-fetch here; the static prompt starts with no pre-stuffed guidance.
   let answer: string;
   try {
-    answer = await answerQuestion({
+    answer = await answerQuestionAgentic({
       question,
       report: report.report_json as ReportJson,
       resumeEvidence: report.resume_evidence_json as ResumeEvidence,
       jobDescriptionText: (report.job_description_text as string) ?? "",
       completedQuestIds,
-      guidance,
+      guidance: [],
     });
   } catch (error) {
     console.error(
@@ -89,35 +87,31 @@ export async function POST(request: Request) {
     );
   }
 
-  // Persist the user message first, then the assistant message. Their created_at
-  // differ by the LLM latency between these two inserts, which is what the
-  // (created_at ASC, id ASC) read ordering relies on. RLS scopes both writes to
-  // the owner. A save failure after a successful answer is logged (error string
-  // only) but not fatal — the caller still gets the answer.
-  const { error: userInsertError } = await supabase
+  // Insert both sides of the exchange in one database operation. A separate
+  // insert could leave an orphaned user question or assistant reply on failure.
+  // The UI treats a persistence failure as retryable so saved history remains
+  // internally consistent.
+  const { error: messageInsertError } = await supabase
     .from("ask_atlas_messages")
-    .insert({
-      user_id: user.id,
-      career_report_id: reportId,
-      role: "user",
-      content: question,
-    });
-  if (userInsertError) {
-    console.error("ask: user message insert failed:", userInsertError.message);
-  }
-
-  const { error: assistantInsertError } = await supabase
-    .from("ask_atlas_messages")
-    .insert({
-      user_id: user.id,
-      career_report_id: reportId,
-      role: "assistant",
-      content: answer,
-    });
-  if (assistantInsertError) {
-    console.error(
-      "ask: assistant message insert failed:",
-      assistantInsertError.message,
+    .insert([
+      {
+        user_id: user.id,
+        career_report_id: reportId,
+        role: "user",
+        content: question,
+      },
+      {
+        user_id: user.id,
+        career_report_id: reportId,
+        role: "assistant",
+        content: answer,
+      },
+    ]);
+  if (messageInsertError) {
+    console.error("ask: message insert failed:", messageInsertError.message);
+    return NextResponse.json(
+      { error: "Ask Atlas could not save this conversation. Please try again." },
+      { status: 500 },
     );
   }
 
