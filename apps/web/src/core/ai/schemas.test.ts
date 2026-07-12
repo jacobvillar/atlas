@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { analysisOutputSchema } from "./schemas";
+import { analysisOutputSchema, roleProfileOutputSchema } from "./schemas";
 
 const valid = {
   resumeEvidence: {
@@ -53,5 +53,25 @@ describe("analysisOutputSchema", () => {
       report: { ...valid.report, roadmapQuests: valid.report.roadmapQuests.slice(0, 1) },
     };
     expect(analysisOutputSchema.safeParse(bad).success).toBe(false);
+  });
+});
+
+describe("roleProfileOutputSchema", () => {
+  it("accepts a substantial role profile", () => {
+    const roleProfile = "A".repeat(500);
+    expect(roleProfileOutputSchema.safeParse({ roleProfile }).success).toBe(true);
+  });
+
+  it("rejects a too-short (< 200 char) profile", () => {
+    expect(roleProfileOutputSchema.safeParse({ roleProfile: "short" }).success).toBe(false);
+  });
+
+  it("rejects a too-long (> 8000 char) profile", () => {
+    const roleProfile = "A".repeat(8001);
+    expect(roleProfileOutputSchema.safeParse({ roleProfile }).success).toBe(false);
+  });
+
+  it("rejects a missing roleProfile field", () => {
+    expect(roleProfileOutputSchema.safeParse({}).success).toBe(false);
   });
 });

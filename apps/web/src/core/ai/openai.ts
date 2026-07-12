@@ -1,6 +1,15 @@
 import OpenAI from "openai";
-import { analysisOutputSchema, type AnalysisOutput, type GuidanceChunk } from "./schemas";
-import { buildAnalysisMessages, type ChatMessage } from "./prompts";
+import {
+  analysisOutputSchema,
+  roleProfileOutputSchema,
+  type AnalysisOutput,
+  type GuidanceChunk,
+} from "./schemas";
+import {
+  buildAnalysisMessages,
+  buildRoleProfileMessages,
+  type ChatMessage,
+} from "./prompts";
 import type { AnalyzeInput } from "@/core/validation/analyze";
 
 let client: OpenAI | null = null;
@@ -84,4 +93,46 @@ export async function generateAnalysis(
   }
 
   throw new Error(`Analysis output failed validation: ${lastError}`);
+}
+
+// Career-path mode (ATLAS-006A): synthesizes a representative role-requirements
+// profile from a target role, validated against roleProfileOutputSchema. Retries
+// once with a corrective message, mirroring generateAnalysis. Returns just the
+// profile string, which the caller feeds into the identical analysis pipeline.
+export async function synthesizeRoleProfile(targetRole: string): Promise<string> {
+  const messages = buildRoleProfileMessages(targetRole);
+  let lastError = "";
+
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const attemptMessages =
+      attempt === 0
+        ? messages
+        : [
+            ...messages,
+            {
+              role: "user" as const,
+              content: `Your previous response was not valid. Error: ${lastError}. Respond again with a single valid JSON object matching the required shape exactly.`,
+            },
+          ];
+
+    const raw = await completeJson(attemptMessages);
+
+    let parsedJson: unknown;
+    try {
+      parsedJson = JSON.parse(raw);
+    } catch {
+      lastError = "Response was not valid JSON.";
+      continue;
+    }
+
+    const result = roleProfileOutputSchema.safeParse(parsedJson);
+    if (result.success) {
+      return result.data.roleProfile;
+    }
+    lastError = result.error.issues
+      .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
+      .join("; ");
+  }
+
+  throw new Error(`Role profile output failed validation: ${lastError}`);
 }

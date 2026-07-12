@@ -7,6 +7,11 @@ import {
   type RoadmapQuest,
 } from "./schemas";
 
+// XP awarded per roadmap phase. Server-owned scoring (see CLAUDE.md AI rules:
+// XP is never model-generated) — used by core/gamification to compute
+// per-report progression.
+export const PHASE_XP = { "30": 50, "60": 75, "90": 100 } as const;
+
 // Sources are derived from the guidance we actually retrieved, never from the
 // model — so a report can never cite a source that was not consulted.
 export function guidanceToSources(guidance: GuidanceChunk[]): ReportSource[] {
@@ -29,10 +34,17 @@ export function assembleReportJson(
   output: AnalysisOutput,
   guidance: GuidanceChunk[],
   targetRole: string | null,
+  inputMode: ReportJson["inputMode"] = "job_description",
 ): { reportJson: ReportJson; quests: RoadmapQuest[] } {
   const quests: RoadmapQuest[] = output.report.roadmapQuests.map(
-    (quest, index) => ({ questId: `q${index + 1}`, ...quest }),
+    (quest, index) => ({
+      questId: `q${index + 1}`,
+      ...quest,
+      xp: PHASE_XP[quest.phase],
+    }),
   );
+
+  const xpTotal = quests.reduce((sum, quest) => sum + quest.xp, 0);
 
   const reportJson: ReportJson = {
     targetRole,
@@ -45,6 +57,8 @@ export function assembleReportJson(
     roadmapQuests: quests,
     sources: guidanceToSources(guidance),
     disclaimer: DISCLAIMER,
+    xpTotal,
+    inputMode,
   };
 
   return { reportJson, quests };

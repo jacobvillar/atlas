@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { assembleReportJson, guidanceToSources } from "./report";
+import { assembleReportJson, guidanceToSources, PHASE_XP } from "./report";
 import { DISCLAIMER, type AnalysisOutput, type GuidanceChunk } from "./schemas";
 
 const output: AnalysisOutput = {
@@ -50,6 +50,38 @@ describe("assembleReportJson", () => {
     expect(reportJson.disclaimer).toBe(DISCLAIMER);
     expect(reportJson.targetRole).toBe("Marketing Analyst");
     expect(reportJson.fitScore).toBe(62);
+  });
+
+  it("assigns server-owned xp per quest based on phase", () => {
+    const { quests, reportJson } = assembleReportJson(output, [], "Marketing Analyst");
+    expect(quests.map((q) => ({ phase: q.phase, xp: q.xp }))).toEqual([
+      { phase: "30", xp: PHASE_XP["30"] },
+      { phase: "60", xp: PHASE_XP["60"] },
+      { phase: "90", xp: PHASE_XP["90"] },
+    ]);
+    expect(reportJson.roadmapQuests.every((q) => typeof q.xp === "number")).toBe(true);
+  });
+
+  it("sets xpTotal to the sum of quest xp", () => {
+    const { reportJson } = assembleReportJson(output, [], "Marketing Analyst");
+    expect(reportJson.xpTotal).toBe(
+      PHASE_XP["30"] + PHASE_XP["60"] + PHASE_XP["90"],
+    );
+  });
+
+  it("defaults inputMode to job_description when not provided", () => {
+    const { reportJson } = assembleReportJson(output, [], "Marketing Analyst");
+    expect(reportJson.inputMode).toBe("job_description");
+  });
+
+  it("honors an explicit inputMode of career_path", () => {
+    const { reportJson } = assembleReportJson(
+      output,
+      [],
+      "Marketing Analyst",
+      "career_path",
+    );
+    expect(reportJson.inputMode).toBe("career_path");
   });
 
   it("derives deduped sources from guidance only", () => {

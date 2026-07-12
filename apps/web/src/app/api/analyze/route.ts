@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/core/supabase/server";
 import { analyzeInputSchema } from "@/core/validation/analyze";
 import { retrieveGuidance } from "@/core/rag/retrieve";
-import { generateAnalysis } from "@/core/ai/openai";
+import { generateAnalysis, synthesizeRoleProfile } from "@/core/ai/openai";
 import { assembleReportJson } from "@/core/ai/report";
 
 // POST /api/analyze — authenticated. Validates input, retrieves RAG guidance,
@@ -35,13 +35,41 @@ export async function POST(request: Request) {
   }
   const input = parsed.data;
 
+  // Career-path mode: the user gave only a target role, so synthesize a
+  // representative role profile that stands in for the job description across
+  // retrieval, generation, and the persisted record. Any failure here is fatal
+  // to the request — we cannot analyze without a job description. Log only the
+  // error string; never the role text or the synthesized profile.
+  let jobDescriptionText = input.jobDescriptionText ?? "";
+  if (input.mode === "career_path") {
+    try {
+      jobDescriptionText = await synthesizeRoleProfile(input.targetRole ?? "");
+    } catch (error) {
+      console.error(
+        "analyze: role profile synthesis failed:",
+        error instanceof Error ? error.message : "unknown error",
+      );
+      return NextResponse.json(
+        {
+          error:
+            "Could not build a role profile. Please try again or paste a job description.",
+        },
+        { status: 502 },
+      );
+    }
+  }
+
+  // From here the pipeline is identical for both modes: it always operates on a
+  // concrete job description (pasted or synthesized).
+  const analysisInput = { ...input, jobDescriptionText };
+
   let output;
   let guidance;
   try {
     guidance = await retrieveGuidance(
-      `${input.targetRole ?? ""}\n${input.jobDescriptionText}`,
+      `${input.targetRole ?? ""}\n${jobDescriptionText}`,
     );
-    output = await generateAnalysis(input, guidance);
+    output = await generateAnalysis(analysisInput, guidance);
   } catch (error) {
     console.error(
       "analyze: generation failed:",
@@ -57,6 +85,7 @@ export async function POST(request: Request) {
     output,
     guidance,
     input.targetRole ?? null,
+    input.mode,
   );
 
   const { data: report, error: insertError } = await supabase
@@ -65,7 +94,7 @@ export async function POST(request: Request) {
       user_id: user.id,
       resume_document_id: input.resumeDocumentId ?? null,
       target_role: input.targetRole ?? null,
-      job_description_text: input.jobDescriptionText,
+      job_description_text: jobDescriptionText,
       resume_evidence_json: output.resumeEvidence,
       report_json: reportJson,
       fit_score: reportJson.fitScore,

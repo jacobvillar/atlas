@@ -75,12 +75,22 @@ export const analysisOutputSchema = z.object({
   report: reportDraftSchema,
 });
 
+// Career-path mode (ATLAS-006A): when a user supplies only a target role, the
+// model synthesizes a representative role-requirements profile that is then fed
+// into the identical downstream pipeline as if it were a pasted job description.
+export const roleProfileOutputSchema = z.object({
+  roleProfile: z.string().min(200).max(8000),
+});
+export type RoleProfileOutput = z.infer<typeof roleProfileOutputSchema>;
+
 export type ResumeEvidence = z.infer<typeof resumeEvidenceSchema>;
 export type QuestDraft = z.infer<typeof questDraftSchema>;
 export type ReportDraft = z.infer<typeof reportDraftSchema>;
 export type AnalysisOutput = z.infer<typeof analysisOutputSchema>;
 
-export type RoadmapQuest = QuestDraft & { questId: string };
+// xp is server-assigned (see core/gamification) — never model-generated, so it
+// is added here rather than in questDraftSchema.
+export type RoadmapQuest = QuestDraft & { questId: string; xp: number };
 
 export interface ReportSource {
   title: string;
@@ -99,6 +109,8 @@ export interface ReportJson {
   roadmapQuests: RoadmapQuest[];
   sources: ReportSource[];
   disclaimer: string;
+  xpTotal: number;
+  inputMode: "job_description" | "career_path";
 }
 
 // Retrieved career-guidance chunk. Defined here (type-only) so pure modules can
