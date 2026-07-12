@@ -50,4 +50,3 @@ Atlas should not store resumes or job descriptions in version 1. Logs should avo
 ## Deployment
 
 The intended deployment target is Vercel. Environment variables should be configured in Vercel and never committed to GitHub.
-

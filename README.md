@@ -38,13 +38,14 @@ Atlas: Map your next career move.
 
 ## Documentation
 
-- [Idea Validation Report](docs/idea-validation.md)
-- [Product Requirements Document](docs/prd.md)
+- [Documentation Index](docs/index.md)
+- [Idea Validation Report](docs/product/idea-validation.md)
+- [Product Requirements Document](docs/product/prd.md)
 - [Spec](spec.md)
-- [Architecture Notes](docs/architecture.md)
-- [Brand Guidelines](docs/brand-guidelines.md)
+- [Architecture Notes](docs/architecture/overview.md)
+- [Brand Guidelines](docs/development/brand-guidelines.md)
+- [Privacy and Safety Notes](docs/security/privacy.md)
 
 ## Privacy Notes
 
 Atlas is designed as a capstone MVP. Version 1 should not store resumes or job descriptions by default. Inputs should be processed for the active request and discarded unless a later version adds explicit user accounts, consent, and data retention controls.
-

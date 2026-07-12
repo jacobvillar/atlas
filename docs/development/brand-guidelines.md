@@ -52,4 +52,3 @@ Preferred copy style:
 - "Compare your resume to a real target role."
 - "Turn gaps into a 30/60/90-day plan."
 - "Use this as guidance, not a hiring prediction."
-

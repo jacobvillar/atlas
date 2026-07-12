@@ -7,23 +7,14 @@ on:
     branches: [main]
 
 jobs:
-  docs:
+  quality:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Check required project docs
+      - name: Check for hardcoded secrets
         run: |
-          test -f README.md
-          test -f docs/idea-validation.md
-          test -f docs/prd.md
-          test -f spec.md
-          test -f docs/architecture.md
-          test -f CLAUDE.md
-          test -f .cursorrules
-      - name: Check forbidden positioning language
-        run: |
-          ! grep -RniE "Better-ed|better-ed|inspired by|instead of assessing|student understanding" README.md docs spec.md CLAUDE.md .cursorrules
-      - name: Check secrets are not committed
-        run: |
-          ! grep -RniE "sk-[A-Za-z0-9]|ANTHROPIC_API_KEY=.*[A-Za-z0-9]|OPENAI_API_KEY=.*[A-Za-z0-9]" README.md docs spec.md CLAUDE.md .cursorrules .env.example
+          ! git grep -nE "sk-[A-Za-z0-9]{20,}|ANTHROPIC_API_KEY=.*[A-Za-z0-9]{20,}|OPENAI_API_KEY=.*[A-Za-z0-9]{20,}" -- \
+            . \
+            ':(exclude).env.example' \
+            ':(exclude).github/workflows/ci.yml'

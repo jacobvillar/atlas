@@ -43,4 +43,3 @@ Secondary users are career shifters and post-grad learners who need to convert t
 - Which AI provider will be used for deployment?
 - Should the fit score be numeric, qualitative, or both?
 - What document size limit should the MVP enforce?
-
