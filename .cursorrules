@@ -1,20 +1,47 @@
 You are helping build Atlas, an AI-powered career readiness web app.
 
 Product scope:
-- Analyze a resume against a target job description.
-- Generate a role-fit report and 30/60/90-day roadmap.
-- Keep v1 focused: no auth, no payments, no LinkedIn scraping, no job-board integrations.
+- Authenticated users submit one resume and one target job description.
+- Atlas generates a saved readiness dashboard, resume improvement suggestions, and personalized 30/60/90-day roadmap quests.
+- Users can mark roadmap quests complete or incomplete.
+- Atlas can show professional milestone badges computed from completed quest categories.
+- Ask Atlas is available only after the first analysis and uses the current report, structured resume evidence, quest progress, and RAG context.
+- v1 excludes payments, LinkedIn scraping, job-board integrations, automated applications, and hiring guarantees.
+- v1 excludes streaks, XP economy, leaderboards, competitive leagues, push notifications, mascot-led nudges, daily lessons, and generic curriculum paths.
+
+Stack:
+- Next.js + TypeScript + Tailwind in apps/web.
+- Product modules live in apps/web/src/modules: public-site, auth, career-dashboard, analysis-workbench, readiness-report, roadmap, ask-atlas, reports.
+- Shared app infrastructure lives in apps/web/src/core: auth, supabase, ai, rag, validation.
+- Supabase Auth, Postgres, RLS, and pgvector.
+- OpenAI gpt-4o-mini for generation.
+- OpenAI text-embedding-3-small for curated career guidance embeddings.
+- FastAPI + Docling for PDF/DOCX resume extraction.
 
 Engineering standards:
-- Keep AI logic server-side.
-- Never expose API keys in client code.
-- Validate user input before calling the AI provider.
-- Validate AI output before rendering.
-- Write tests for validation, prompt construction, and output schema handling.
-- Avoid storing resume or job description content in v1.
+- Keep AI logic, prompt construction, RAG retrieval, and secret usage server-side.
+- Never expose OpenAI keys or Supabase service-role keys in client code.
+- Validate user inputs before extraction, retrieval, or generation.
+- Validate AI output before rendering or saving.
+- Add tests for validation, prompt construction, output schema handling, RAG chunking, retrieval filtering, and document file validation.
+- Keep document extraction separate from report generation.
+- Keep RAG ingestion separate from private user resume processing.
+- Keep Python RAG as offline/admin ingestion only; runtime retrieval belongs in apps/web/src/core/rag.
+- Use Supabase RLS for every user-owned table.
+- Do not commit unless the user explicitly asks.
+
+Privacy standards:
+- Do not store uploaded resume files.
+- Do not store full raw resume text.
+- Store structured resume evidence only when saved Ask Atlas needs resume context.
+- Do not embed private resumes, job descriptions, reports, or Ask Atlas messages into the shared RAG knowledge base.
+- Do not log private resume or job description content.
 
 Design standards:
-- Follow a clean professional interface.
-- Use Inter, white/soft gray backgrounds, restrained blue accent, thin borders, and 6-12px radius components.
-- Build the usable app first, not a marketing-only landing page.
-
+- Public nav: Home, Use Cases, Privacy, FAQ, About, Login, Sign up for free.
+- Build the usable authenticated dashboard first, not a marketing-only landing page.
+- Use the Atlas name and tagline: "Map your next career move."
+- Use a clean professional interface with white or soft gray surfaces, restrained blue accents, thin borders, and 6-12px radius components.
+- Do not overpromise employment outcomes.
+- Login page copy: "Welcome back" and "Continue your career roadmap."
+- Signup page copy: "Start mapping your next career move" and a short note that accounts save reports, quests, and Ask Atlas chats.
