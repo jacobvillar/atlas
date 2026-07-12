@@ -1,0 +1,28 @@
+AI-Powered Web Application — Submission
+
+Student: Jacob Villar
+Application: Atlas — AI Career Readiness Coach
+
+GitHub repository:
+https://github.com/jacobvillar/atlas
+
+Live deployed application:
+https://atlas-wheat-iota.vercel.app/
+
+Demo recording (approximately 2 minutes):
+https://www.loom.com/share/258a8c4ffb2d47708e1dfb8d6be4f0cd
+
+Included deliverables in this repository:
+- Idea Validation Report: deliverables/Idea-Validation.pdf
+- Product Requirements Document (PRD): deliverables/PRD.pdf
+- Spec File: spec.md
+- Architecture Notes: docs/architecture/
+- README: README.md
+- CI/CD workflow: .github/workflows/
+- Reflection Write-up: deliverables/Reflection.pdf
+
+Submission checklist:
+- [ ] Repository is public.
+- [ ] Live application URL works.
+- [x] Demo recording URL is accessible.
+- [ ] Required documents are attached to Canvas or available through the repository.

@@ -16,7 +16,7 @@ Technical scope control mattered as much as product scope. The implementation co
 
 ## Future Versions
 
-The next product priority is primary user validation: run the five-user concierge test, capture anonymized feedback, and check whether users can identify and complete a useful next action. I would also add user-controlled report deletion, a wider library of career-path presets, richer report-quality evaluation, and progress history across multiple reports.
+The next product priority is primary user validation: run the five-user concierge test, capture anonymized feedback, and check whether users can identify and complete a useful next action. I would then add an adaptive recommendation engine, a wider library of career-path presets, richer report-quality evaluation, and progress history across multiple reports. With explicit user permission, Atlas could also explore agentic integrations for job-market research and LinkedIn profile insights.
 
 I would make the experience more gamified in a purposeful way, not simply add points. A future Atlas could include a visual campaign map with milestone checkpoints, optional mission categories for resume evidence, portfolio proof, networking, and interview practice, and a “next best mission” based on the user’s current gap. Completing a mission could unlock a private progress recap, a portfolio evidence checklist, or a new campaign stage. XP, ranks, badges, and level-up moments should remain private and tied to real evidence created by the user. I would avoid public leaderboards, streak loss, countdown pressure, or rewards that imply completing tasks guarantees an interview or job offer.
 

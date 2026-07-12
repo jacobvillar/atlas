@@ -54,6 +54,4 @@
 
 - Choose final deployment host for the Python document service: Render or Railway.
 - Select and cite the first public career guidance resources for the RAG seed set.
-- Decide whether report deletion is included in v1 or listed as the required v2 GitHub issue.
-- Create the public GitHub repository after GitHub authentication is fixed.
-- Add the live URL and demo recording link to the README before submission.
+- Define the privacy guardrails, user-feedback signals, and success criteria for the v2 adaptive recommendation engine.

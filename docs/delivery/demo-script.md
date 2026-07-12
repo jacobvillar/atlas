@@ -1,39 +1,60 @@
 # Atlas Demo Script (2 Minutes)
 
-Use a real, sanitized resume and job description. Keep the browser zoom at 100%, close unrelated tabs, and start on the live home page. Do not show API keys, Supabase tables, or personal contact information.
+Live app: <https://atlas-wheat-iota.vercel.app/>
 
-## 0:00-0:15 - Problem and Product
+Use a sanitized PDF resume and a real target job description. Record a **first-time user** account so the dashboard begins with no reports or quests. Keep the browser at 100% zoom, close unrelated tabs, and do not show passwords, API keys, database screens, or personal contact information.
 
-> Hi, I am Jacob, and this is Atlas: Map your next career move. Atlas helps a job seeker compare their resume with a real target role, then turns the gaps into a practical 30/60/90-day career campaign. It is career guidance, not a hiring prediction.
+## 0:00-0:15 - Login and Empty Dashboard
 
-Show the home page, then select **Begin campaign**.
+> Welcome to Atlas: a gamified AI career-readiness coach that helps job seekers map their next career move. Atlas turns a resume and a target role into clear AI insights, practical recommendations, and a personalized career roadmap.
 
-## 0:15-0:30 - Sign In and Start Analysis
+> For this MVP, the core capabilities are secure user login, PDF resume extraction, AI-powered resume-to-role analysis, readiness insights, targeted recommendations, and generated roadmap quests. I will show the full journey for a first-time user.
 
-> Users sign in before analysis so reports, questions, and progress stay private to their account. From the dashboard, I can start a new analysis.
+Log in, then pause on the dashboard. Point out **You have no reports yet** and that the quest preview is empty.
 
-Show the signed-in dashboard, then open **New analysis**.
+> Because this is a first-time user, there are no reports, recommendations, or quests yet. Atlas starts with the user's own resume and target role instead of a generic career plan.
 
-## 0:30-0:55 - Resume and Target Role
+Click **Start a new analysis**.
 
-> Atlas accepts PDF and DOCX resumes. The private document service extracts the text for review without retaining the uploaded file. I can correct the extracted text before continuing. Then I paste a target job description, which keeps the analysis specific to the role I want.
+## 0:15-0:40 - PDF Upload and AI Extraction
 
-Show the reviewed resume text, target job description, and optional target role. Click **Generate readiness report**.
+> I begin by uploading a PDF resume. Atlas sends it to a private document-extraction service, which converts it into editable text for review. The uploaded file itself is not retained as part of the report.
 
-## 0:55-1:20 - AI Readiness Report
+Choose the sanitized PDF. While **Extracting...** is visible, say:
 
-> Atlas uses a structured AI response to identify matched evidence, role requirements, priority gaps, and resume improvements. It retrieves relevant guidance from a small curated knowledge base, and the fit score is clearly presented as preparation guidance rather than a prediction.
+> This is the first AI-assisted step: Atlas reads the document and loads the extracted resume text below, so the user can review or correct it before any analysis happens.
 
-Show the fit score, matched strengths, priority gaps, resume suggestions, and source titles.
+Show the **Extracted resume text loaded below** notice and briefly scroll through the populated resume field.
 
-## 1:20-1:45 - Career Campaign and Ask Atlas
+## 0:40-0:55 - Target Role and Analysis Request
 
-> The main difference is follow-through. Atlas turns the report into trackable 30, 60, and 90-day quests. When I complete a quest, my private XP, readiness level, and badges update. I can also use Ask Atlas to ask a focused follow-up about this report.
+> Next, I paste a target job description. This gives the AI a concrete role to compare against the resume, rather than generating broad advice.
 
-Complete one safe sample quest, show the progress update, then ask one short report-specific question such as: “Which quest should I complete first?”
+Show the target job description and optional target-role field. Click **Generate readiness report** and show the **Analyzing...** state.
 
-## 1:45-2:00 - Engineering and Close
+## 0:55-1:35 - AI Insights and Recommendations
 
-> Atlas uses Next.js, Supabase Auth and Row Level Security, OpenAI, and a separate Python document-extraction service. The project has automated linting, web and Python tests, secret scanning, and a deployed live URL. The next version would add user-tested improvements such as report deletion and a richer career-path library. Thank you.
+> Atlas now analyzes the reviewed resume against the role requirements and returns a structured readiness report. The result identifies evidence already present in the resume, the most important gaps, and practical recommendations the user can act on.
 
-End on the updated report or dashboard. Keep the recording under two minutes; the detailed architecture belongs in the README and repository, not the walkthrough.
+Show the report in this order, spending only a few seconds on each:
+
+1. The readiness score and guidance disclaimer.
+2. Matched strengths or evidence from the resume.
+3. Priority gaps relative to the target role.
+4. Resume improvements and specific next-step recommendations.
+
+> The score is preparation guidance, not a hiring prediction. The value is in the explanation: what the user already demonstrates, what is missing for this role, and the clearest next actions.
+
+## 1:35-1:50 - Recommendations Become a Plan
+
+> After the AI report is generated, Atlas creates personalized roadmap quests from the priority gaps. This is why the dashboard started empty: the first recommendations and quests are created from this user's actual analysis.
+
+Show the generated roadmap section or return to the dashboard to show that the empty state now contains the first report and quest preview. Do not spend time completing a quest in this recording.
+
+## 1:50-2:00 - Close and Next Enhancements
+
+> Atlas combines secure login, PDF extraction, and structured AI analysis to turn a resume and a target role into understandable insights and practical recommendations. It is built with Next.js, Supabase, OpenAI, and a separate Python extraction service.
+
+> Next, I would grow Atlas with a stronger recommendation engine that adapts to each user's goals and progress, plus a richer gamified interface with clearer milestones, rewards, and momentum. With explicit user permission, future agentic tools could also connect to career resources - such as job-market research and LinkedIn profile insights - to help users turn recommendations into well-informed actions. Thank you.
+
+End on the readiness report or the newly populated dashboard. Keep the recording below two minutes; the repository contains the architecture, tests, and implementation details.

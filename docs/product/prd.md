@@ -45,5 +45,5 @@ Secondary users are career shifters who need to translate transferable experienc
 
 - Which production host will run the document service: Render or Railway?
 - What upload-size limit is appropriate for a typical resume while preserving Vercel and document-service limits?
-- Should users be able to delete saved reports in v1?
+- Which permissioned integrations provide the most useful job-market or profile context without expanding the privacy boundary too far?
 - Which additional public, licensed career resources should be added to the initial RAG seed set?

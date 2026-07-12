@@ -45,7 +45,7 @@ Email/password auth is enough for v1 unless a later implementation decision adds
 
 If Atlas adds richer account features, consider:
 
-- Report deletion controls.
+- Adaptive recommendations that use private progress and explicit user feedback.
 - Explicit opt-in for storing full resume text.
 - Multiple saved resumes per user.
 - Organization accounts for career coaches.

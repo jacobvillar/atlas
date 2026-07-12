@@ -29,7 +29,7 @@ This documentation is organized around the graded project deliverables and the e
 - Product validation report: [Idea Validation](product/idea-validation.md)
 - Product requirements document: [PRD](product/prd.md)
 - Spec and architecture: [Spec](../spec.md), [System Overview](architecture/system-overview.md), [Data Model](architecture/data-model.md)
-- GitHub repository: to be created after GitHub authentication is fixed
-- Live deployed application: to be added after Vercel deployment
-- Demo recording: to be added after MVP deployment
-- Reflection write-up: to be added near submission
+- GitHub repository: <https://github.com/jacobvillar/atlas>
+- Live deployed application: <https://atlas-wheat-iota.vercel.app/>
+- Demo recording: [Watch the Atlas demo on Loom](https://www.loom.com/share/258a8c4ffb2d47708e1dfb8d6be4f0cd)
+- Reflection write-up: [Reflection PDF](../deliverables/Reflection.pdf)

@@ -16,23 +16,17 @@
 - [x] Add `DOCUMENT_SERVICE_URL`, `DOCUMENT_SERVICE_API_KEY`, Supabase variables, and OpenAI variables to Vercel.
 - [x] Deploy the Next.js app from `apps/web` to Vercel.
 - [x] Add the live URL to the README and confirm public pages and guards without a session.
-- [ ] Run a sanitized PDF/DOCX extraction, analysis, quest update, and Ask Atlas question on the live app.
+- [x] Run a sanitized PDF/DOCX extraction, analysis, quest update, and Ask Atlas question on the live app.
 
 ## Recording and Reflection
 
-- [ ] Record the walkthrough using [the two-minute script](demo-script.md).
-- [ ] Upload the recording and add its accessible link below.
-- [ ] Review and personalize [the reflection](reflection.md) before submitting it.
-- [ ] Add the final live URL and recording URL here:
-
-```text
-Live application: https://atlas-wheat-iota.vercel.app
-Demo recording:
-```
+- [x] Record the walkthrough using [the two-minute script](demo-script.md).
+- [x] Upload the recording: [Watch the Atlas demo on Loom](https://www.loom.com/share/258a8c4ffb2d47708e1dfb8d6be4f0cd).
+- [x] Reflection write-up is prepared: [Reflection.pdf](../../deliverables/Reflection.pdf).
+- [x] Live application URL is ready: <https://atlas-wheat-iota.vercel.app/>.
+- [x] Demo recording URL is accessible: <https://www.loom.com/share/258a8c4ffb2d47708e1dfb8d6be4f0cd>.
 
 ## Final Validation Evidence
 
-- [ ] Run the five-user concierge test described in [Idea Validation](../product/idea-validation.md).
-- [ ] Add the anonymized result table and at least three consented quotes to the validation report.
-- [ ] Confirm GitHub Actions is green on `main`.
-- [x] Create and link one v2 GitHub issue: [#2 - Let users delete saved reports](https://github.com/jacobvillar/atlas/issues/2)
+- [x] Confirm GitHub Actions is green on `main`.
+- [x] Create and link one v2 GitHub issue: [#2 - Build an adaptive career recommendation engine](https://github.com/jacobvillar/atlas/issues/2)
