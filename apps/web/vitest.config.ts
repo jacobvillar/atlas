@@ -9,5 +9,8 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["src/**/*.test.ts"],
+    // Unit tests must stay deterministic and free. Live model checks are
+    // opt-in through `npm run test:live` because they consume API budget.
+    exclude: ["src/**/*.live.test.ts"],
   },
 });

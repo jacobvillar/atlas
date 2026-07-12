@@ -10,6 +10,8 @@ We aren't another complicated career-advice tool. Users answer a few career ques
 
 **v1 scope:** Atlas accepts any pasted job description. Initial career-path presets, example content, and curated guidance focus on AI, data, and adjacent early-career roles; the analysis flow does not reject another target role.
 
+**Live application:** [atlas-wheat-iota.vercel.app](https://atlas-wheat-iota.vercel.app)
+
 ## How to Use Atlas
 
 1. **Answer a few career questions** to build your plan — current role, target role, and any references from a target job description.
@@ -34,7 +36,7 @@ Progression mechanics (XP, readiness levels, rewards, and aura) are in-app recog
 ### For a Capstone MVP
 
 - **Product validation** -> 7-step validation, PRD, and architecture notes
-- **Document processing** -> Runtime PDF/DOCX extraction with Docling
+- **Document processing** -> Runtime PDF/DOCX extraction with a lightweight FastAPI service
 - **RAG practice** -> Curated career guidance indexed with embeddings
 - **AI engineering** -> Structured prompting, schema validation, and privacy boundaries
 - **Deployment path** -> Vercel web app, Supabase backend, and Render/Railway document service
@@ -45,7 +47,7 @@ Progression mechanics (XP, readiness levels, rewards, and aura) are in-app recog
 
 | Capability | Description |
 | --- | --- |
-| **Resume Extraction** | Extract text from PDF/DOCX resumes through a private FastAPI + Docling service |
+| **Resume Extraction** | Extract text from PDF/DOCX resumes through a private FastAPI service using `pypdfium2` and `python-docx` |
 | **Role-Fit Analysis** | Compare reviewed resume text against a pasted job description |
 | **Readiness Dashboard** | Render fit score, strengths, gaps, role requirements, and priority actions |
 | **Resume Suggestions** | Suggest stronger bullets and missing evidence the user can verify |
@@ -82,7 +84,7 @@ Progression mechanics (XP, readiness levels, rewards, and aura) are in-app recog
              ▼                    ▼
 ┌─────────────────────────────┐   ┌───────────────────────────────┐
 │ FASTAPI DOCUMENT SERVICE    │   │ SUPABASE                      │
-│ Docling PDF/DOCX extraction │   │ Auth, Postgres, RLS, pgvector │
+│ PDF/DOCX text extraction    │   │ Auth, Postgres, RLS, pgvector │
 └─────────────────────────────┘   └───────────────────────────────┘
                                       │
                                       ▼
@@ -162,7 +164,7 @@ This keeps the MVP simpler than microservices while still making the codebase ea
 | Resume/job analysis | `gpt-4o-mini` | Generates structured readiness report JSON |
 | Ask Atlas | `gpt-4o-mini` | Answers report-specific follow-up questions |
 | Career guidance embeddings | `text-embedding-3-small` | Embeds curated Markdown guidance |
-| Resume extraction | Docling | Converts PDF/DOCX resumes into reviewable text |
+| Resume extraction | FastAPI, `pypdfium2`, `python-docx` | Converts PDF/DOCX resumes into reviewable text |
 | Vector retrieval | Supabase `pgvector` | Retrieves relevant career guidance chunks |
 
 AI guardrails:
@@ -188,7 +190,7 @@ AI guardrails:
 
 - **Supabase** — PostgreSQL, Row Level Security, `pgvector`
 - **Next.js Route Handlers** — Auth-aware server routes
-- **FastAPI + Docling** — PDF/DOCX resume extraction
+- **FastAPI + `pypdfium2` + `python-docx`** — PDF/DOCX resume extraction
 
 ### AI
 
@@ -215,7 +217,7 @@ atlas/
 │       ├── modules/                  # Product workflow modules
 │       └── components/ui/            # Shared UI primitives
 ├── services/knowledge/
-│   ├── document-service/             # FastAPI + Docling extraction
+│   ├── document-service/             # FastAPI PDF/DOCX extraction
 │   └── rag/                          # Markdown seed docs + ingestion
 ├── supabase/migrations/              # Schema, RLS, pgvector
 ├── docs/                             # Product, architecture, delivery docs
@@ -238,3 +240,6 @@ atlas/
 - [Data Model](docs/architecture/data-model.md)
 - [RAG Integration](docs/integrations/rag.md)
 - [Document Service Integration](docs/integrations/document-service.md)
+- [Demo Script](docs/delivery/demo-script.md)
+- [Reflection](docs/delivery/reflection.md)
+- [Submission Checklist](docs/delivery/submission-checklist.md)

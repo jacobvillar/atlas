@@ -15,7 +15,7 @@ Tagline: "Map your next career move."
 - Vector search: Supabase `pgvector`
 - AI generation: OpenAI `gpt-4o-mini`
 - Embeddings: OpenAI `text-embedding-3-small`
-- Document extraction: Python FastAPI service with Docling
+- Document extraction: Python FastAPI service using `pypdfium2` and `python-docx`
 - Deployment target: Vercel for the web app; Render or Railway for Python services
 
 ## Repository Structure
@@ -25,7 +25,7 @@ atlas/
   apps/web/src/app/                 # Next.js routes and API routes
   apps/web/src/modules/             # Product modules
   apps/web/src/core/                # Shared app infrastructure
-  services/knowledge/document-service/ # FastAPI + Docling resume extraction
+  services/knowledge/document-service/ # FastAPI PDF/DOCX resume extraction
   services/knowledge/rag/           # Career guidance ingestion and retrieval
   supabase/migrations/              # Database schema, RLS, pgvector setup
   docs/                             # Product, architecture, delivery docs
@@ -105,7 +105,7 @@ atlas/
 ## Python Service Rules
 
 - Keep the document service under `services/knowledge/document-service`.
-- Validate file type, file size, and page/character limits before Docling extraction.
+- Validate file name, MIME type, file size, and content signature before extraction.
 - Use temporary files only when required and clean them up after processing.
 - Return structured extraction results and clear validation errors.
 - Do not make the document service responsible for OpenAI report generation.
@@ -165,7 +165,7 @@ Examples:
 ```text
 docs(plan): finalize Atlas MVP plan
 docs(readme): align overview with architecture plan
-feat(document-service): add Docling extraction endpoint
+feat(document-service): add resume extraction endpoint
 feat(rag): load curated career guidance chunks
 feat(ask-atlas): add report-specific follow-up chat
 test(supabase): cover report ownership policies
@@ -189,6 +189,7 @@ These commands may need adjustment after the scaffold is implemented.
 cd apps/web && npm run lint
 cd apps/web && npm run build
 cd apps/web && npm test -- --run
+cd apps/web && npm run test:live -- --run # opt-in; consumes OpenAI API budget
 cd services/knowledge/document-service && pytest
 cd services/knowledge/rag && pytest
 ```

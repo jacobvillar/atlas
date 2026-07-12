@@ -9,7 +9,7 @@ Atlas is a modular monolith: one Next.js application owns the authenticated prod
 ```mermaid
 flowchart LR
   User[Authenticated user] --> Web[Next.js web app on Vercel]
-  Web --> Extract[FastAPI + Docling extraction service]
+  Web --> Extract[FastAPI PDF/DOCX extraction service]
   Extract --> Web
   Web --> Auth[Supabase Auth]
   Web --> DB[Supabase Postgres + RLS]
@@ -22,7 +22,7 @@ flowchart LR
 ## Runtime Flow
 
 1. Supabase Auth identifies the user before any analysis or saved-data operation.
-2. The web app sends a PDF/DOCX to the FastAPI document service for temporary Docling extraction.
+2. The web app sends a PDF/DOCX to the FastAPI document service for temporary text extraction.
 3. The user reviews and edits extracted text in the web app.
 4. The server retrieves relevant curated guidance from `pgvector` and calls OpenAI with labeled resume, role, and guidance context.
 5. The server validates structured output, assigns stable quest IDs and XP, then saves the report, structured resume evidence, and quest rows under the user ID.
@@ -50,7 +50,7 @@ flowchart LR
 ## Failure Handling
 
 - Reject unauthenticated, unsupported, empty, and oversized inputs before extraction or generation.
-- Return a recoverable error if Docling, retrieval, OpenAI, or persistence fails; do not save a partial report or award progress.
+- Return a recoverable error if document extraction, retrieval, OpenAI, or persistence fails; do not save a partial report or award progress.
 - Validate model output before rendering or saving it.
 - Scope report, message, and quest updates to the authenticated owner. Cross-user access returns no data or an authorization error.
 

@@ -121,8 +121,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Could not save report." }, { status: 500 });
   }
 
-  // Seed one progress row per quest. RLS scopes these to the owner; a failure
-  // here leaves a valid report, so log and continue rather than 500.
+  // Seed one progress row per quest. A report without those rows leaves the
+  // quest board permanently broken, so roll back the report rather than
+  // returning a partially usable analysis.
   if (quests.length > 0) {
     const { error: questError } = await supabase
       .from("roadmap_quest_progress")
@@ -136,6 +137,17 @@ export async function POST(request: Request) {
       );
     if (questError) {
       console.error("analyze: quest seed failed:", questError.message);
+      const { error: rollbackError } = await supabase
+        .from("career_reports")
+        .delete()
+        .eq("id", report.id);
+      if (rollbackError) {
+        console.error("analyze: report rollback failed:", rollbackError.message);
+      }
+      return NextResponse.json(
+        { error: "Could not initialize your roadmap. Please try again." },
+        { status: 500 },
+      );
     }
   }
 

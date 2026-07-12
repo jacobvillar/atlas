@@ -13,6 +13,7 @@ import pytest
 from app.validation import (
     DOCX_REQUIRED_ENTRY,
     validate_content,
+    validate_file_metadata,
     validate_upload,
 )
 
@@ -49,6 +50,29 @@ def test_rejects_unsupported_content_type():
 def test_rejects_file_too_large():
     with pytest.raises(ValueError, match="File is too large"):
         validate_upload(content_type=PDF_CONTENT_TYPE, size_bytes=6 * ONE_MB, max_mb=5)
+
+
+def test_accepts_supported_file_names_with_matching_mime_type_case_insensitively():
+    assert validate_file_metadata("My Resume.PDF", PDF_CONTENT_TYPE) == PDF_CONTENT_TYPE
+    assert validate_file_metadata("resume.docx", DOCX_CONTENT_TYPE) == DOCX_CONTENT_TYPE
+
+
+@pytest.mark.parametrize("file_name", [None, "resume", "resume.pdf.exe", "resume.txt"])
+def test_rejects_missing_or_unsupported_file_name(file_name):
+    with pytest.raises(ValueError, match="Unsupported file type"):
+        validate_file_metadata(file_name, PDF_CONTENT_TYPE)
+
+
+@pytest.mark.parametrize(
+    ("file_name", "content_type"),
+    [
+        ("resume.pdf", DOCX_CONTENT_TYPE),
+        ("resume.docx", PDF_CONTENT_TYPE),
+    ],
+)
+def test_rejects_mismatched_file_name_and_content_type(file_name, content_type):
+    with pytest.raises(ValueError, match="File name and type do not match"):
+        validate_file_metadata(file_name, content_type)
 
 
 def test_accepts_valid_pdf_magic_bytes():

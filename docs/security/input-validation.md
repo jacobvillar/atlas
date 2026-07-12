@@ -8,6 +8,7 @@
 ## Resume Upload Rules
 
 - Supported file types: PDF and DOCX.
+- Require a matching PDF/DOCX filename and declared MIME type, then verify content signatures server-side.
 - Reject unsupported MIME types.
 - Reject files over the configured maximum size.
 - Extracted text must be shown to the user for review before analysis.
@@ -40,8 +41,8 @@ Validation errors should be shown before any OpenAI request is made.
 
 ## Suggested Limits
 
-- Minimum resume text: 300 characters.
-- Minimum job description text: 200 characters.
-- Maximum resume text: 30,000 characters.
-- Maximum job description text: 30,000 characters.
+- Minimum resume text: 50 characters.
+- Minimum job description text: 50 characters.
+- Maximum resume text: 20,000 characters.
+- Maximum job description text: 15,000 characters.
 - Maximum resume upload: 5 MB.

@@ -4,7 +4,7 @@
 
 - Node.js 20 or newer
 - npm
-- Python 3.10 or newer for Docling
+- Python 3.10 or newer for the document service
 - Supabase project
 - OpenAI API key from the course/Vocareum environment
 

@@ -13,7 +13,7 @@
 - Scaffold Next.js web app under `apps/web`.
 - Scaffold web product modules under `apps/web/src/modules`.
 - Add the initial public site pages: Home, Use Cases, Privacy, FAQ, and About.
-- Scaffold FastAPI Docling service under `services/knowledge/document-service`.
+- Scaffold FastAPI PDF/DOCX extraction service under `services/knowledge/document-service`.
 - Scaffold RAG ingestion workspace under `services/knowledge/rag`.
 - Add Supabase migrations for auth-owned data and vector resources.
 

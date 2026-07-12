@@ -16,7 +16,7 @@ Extract useful career evidence from a PDF/DOCX resume and compare it against a t
 ## Guardrails
 
 - Require authentication before analysis.
-- Extract resume text through the Docling document service.
+- Extract resume text through the private FastAPI document service.
 - Let the user review extracted text before analysis.
 - Do not store uploaded resume files.
 - Do not store full raw resume text.

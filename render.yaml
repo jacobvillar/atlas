@@ -1,4 +1,4 @@
-# Render Blueprint for the Atlas document service (FastAPI + Docling).
+# Render Blueprint for the Atlas document service (FastAPI + pypdfium2 + python-docx).
 # Deploy: Render dashboard → New → Blueprint → select this repo.
 #
 # After the service is live:
@@ -6,9 +6,8 @@
 #      to the value in your local .env — the SAME value must go in Vercel.
 #   2. Copy the service URL into Vercel's DOCUMENT_SERVICE_URL.
 #
-# Note: Docling pulls in heavy ML deps (torch + models). The free plan (512 MB)
-# may run out of memory on build/first extraction; upgrade `plan` to `starter`
-# if the service OOMs or cold starts fail.
+# Note: the lightweight extractor avoids model downloads and is suitable for a
+# free instance. Scanned or image-only PDFs still need a manual paste fallback.
 services:
   - type: web
     name: atlas-document-service

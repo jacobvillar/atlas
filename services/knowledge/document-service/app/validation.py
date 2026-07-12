@@ -17,6 +17,10 @@ PDF_CONTENT_TYPE = "application/pdf"
 DOCX_CONTENT_TYPE = (
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 )
+CONTENT_TYPE_BY_EXTENSION = {
+    ".pdf": PDF_CONTENT_TYPE,
+    ".docx": DOCX_CONTENT_TYPE,
+}
 
 # Magic-byte signatures. The client-supplied Content-Type header is not
 # trustworthy, so we independently confirm the actual file bytes.
@@ -44,6 +48,27 @@ def validate_upload(content_type: str, size_bytes: int, max_mb: int = 5) -> None
     max_bytes = max_mb * 1024 * 1024
     if size_bytes > max_bytes:
         raise ValueError(f"File is too large. Maximum size is {max_mb} MB.")
+
+
+def validate_file_metadata(file_name: str | None, content_type: str) -> str:
+    """Ensure filename and MIME select the same trusted extractor."""
+    if not file_name:
+        raise ValueError("Unsupported file type. Upload a PDF or DOCX resume.")
+
+    lower_name = file_name.lower()
+    expected_content_type = next(
+        (
+            mime_type
+            for extension, mime_type in CONTENT_TYPE_BY_EXTENSION.items()
+            if lower_name.endswith(extension)
+        ),
+        None,
+    )
+    if not expected_content_type:
+        raise ValueError("Unsupported file type. Upload a PDF or DOCX resume.")
+    if content_type != expected_content_type:
+        raise ValueError("File name and type do not match. Upload a PDF or DOCX resume.")
+    return expected_content_type
 
 
 def validate_content(content: bytes, content_type: str) -> None:

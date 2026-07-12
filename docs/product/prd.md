@@ -17,7 +17,7 @@ Secondary users are career shifters who need to translate transferable experienc
 | Feature | MVP behavior and acceptance criterion |
 | --- | --- |
 | Account and privacy | A user signs up or signs in before analysis. Reports, quest progress, and messages are visible only to their account; Atlas does not retain uploaded resume files or full raw resume text. |
-| Resume intake | A user uploads a PDF or DOCX resume. Atlas extracts the text with Docling, rejects unsupported or oversized files, and lets the user edit the extracted text before analysis. |
+| Resume intake | A user uploads a PDF or DOCX resume. Atlas extracts text with a private document service, rejects unsupported, mismatched, or oversized files, and lets the user edit the extracted text before analysis. |
 | Target-role setup | A user pastes a job description or selects/enters a supported career path. Atlas validates that it has reviewed resume text and a usable target-role description before it runs analysis. |
 | Readiness report | Atlas produces and saves a structured report with a guidance-only fit score, matched evidence, gaps, priority actions, resume suggestions, and sources from curated career guidance. |
 | Career campaign | Atlas converts report gaps into 30/60/90-day quests. A user can complete or reopen a quest and immediately sees the related progress, XP, readiness level, and earned badge updates. These are private in-app motivators, not measures of employability. |
@@ -43,7 +43,7 @@ Secondary users are career shifters who need to translate transferable experienc
 
 ## Open Questions
 
-- Which production service will host Docling: Render or Railway?
+- Which production host will run the document service: Render or Railway?
 - What upload-size limit is appropriate for a typical resume while preserving Vercel and document-service limits?
 - Should users be able to delete saved reports in v1?
 - Which additional public, licensed career resources should be added to the initial RAG seed set?

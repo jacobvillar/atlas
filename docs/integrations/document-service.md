@@ -1,6 +1,6 @@
 # Document Service Integration
 
-Atlas uses a Python FastAPI service with Docling to extract text from resume PDFs and DOCX files.
+Atlas uses a Python FastAPI service with `pypdfium2` for PDFs and `python-docx` for DOCX files to extract resume text.
 
 ## Responsibility
 
@@ -8,7 +8,7 @@ The document service handles private user documents at runtime:
 
 - Accept PDF/DOCX resume upload.
 - Validate file type and size.
-- Run Docling extraction.
+- Run format-specific text extraction.
 - Return extracted text/markdown and metadata.
 - Delete temporary files.
 - Avoid persistent file storage.

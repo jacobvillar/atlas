@@ -11,10 +11,15 @@ const ALLOWED_MIME_TYPES = new Set([
 ]);
 const ALLOWED_EXTENSIONS = [".pdf", ".docx"];
 const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
+const CONTENT_TYPE_BY_EXTENSION: Record<string, string> = {
+  ".pdf": "application/pdf",
+  ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+};
 
-function hasAllowedExtension(fileName: string) {
+function expectedContentType(fileName: string) {
   const lower = fileName.toLowerCase();
-  return ALLOWED_EXTENSIONS.some((ext) => lower.endsWith(ext));
+  const extension = ALLOWED_EXTENSIONS.find((ext) => lower.endsWith(ext));
+  return extension ? CONTENT_TYPE_BY_EXTENSION[extension] : null;
 }
 
 export async function POST(request: Request) {
@@ -47,7 +52,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "No file provided." }, { status: 400 });
   }
 
-  if (!hasAllowedExtension(file.name) && !ALLOWED_MIME_TYPES.has(file.type)) {
+  const expectedType = expectedContentType(file.name);
+  // Browser metadata is not trusted (the Python service confirms magic bytes),
+  // but a provided MIME type must agree with the filename so both services
+  // select the same parser. Some browsers omit File.type, so normalize that
+  // case to the trusted extension-derived type before forwarding.
+  if (
+    !expectedType ||
+    (file.type &&
+      (!ALLOWED_MIME_TYPES.has(file.type) || file.type !== expectedType))
+  ) {
     return NextResponse.json(
       { error: "Unsupported file type. Upload a PDF or DOCX resume." },
       { status: 400 },
@@ -62,7 +76,11 @@ export async function POST(request: Request) {
   }
 
   const forwardFormData = new FormData();
-  forwardFormData.append("file", file, file.name);
+  const forwardFile =
+    file.type === expectedType
+      ? file
+      : new File([file], file.name, { type: expectedType });
+  forwardFormData.append("file", forwardFile, file.name);
 
   let extraction: { text?: string; markdown?: string; fileName?: string; fileType?: string };
   try {
@@ -111,7 +129,7 @@ export async function POST(request: Request) {
     .insert({
       user_id: user.id,
       file_name: file.name,
-      file_type: file.type || extraction.fileType || "application/octet-stream",
+      file_type: expectedType,
       extraction_status: "completed",
     })
     .select("id")

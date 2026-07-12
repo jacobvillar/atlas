@@ -99,7 +99,7 @@ Do not adopt these practices for the MVP:
 - Keep the dashboard focused on resume readiness, not general chat.
 - Use clear UI states for upload, validating, extracting, analyzing, completed, and failed.
 - Keep report sections scannable: score, strengths, gaps, resume edits, roadmap quests, quest progress, sources, and Ask Atlas.
-- Keep gamification lightweight: quest completion and milestone badges only in v1; no XP, streaks, leaderboards, competitive leagues, push notifications, mascot-led nudges, or generic lessons.
+- Keep gamification lightweight: private quest XP, readiness levels, and milestone badges are in scope; streaks, leaderboards, competitive leagues, push notifications, mascot-led nudges, and generic lessons are not.
 - Do not add a marketing-heavy landing page until the core workflow works.
 
 ## AI And RAG Rules
@@ -113,7 +113,7 @@ Do not adopt these practices for the MVP:
 
 ## Document Service Rules
 
-- Docling handles PDF/DOCX extraction.
+- The document service handles PDF/DOCX text extraction.
 - Validate file type and size before extraction.
 - Return structured extraction output and clear errors.
 - Delete temporary files after processing.

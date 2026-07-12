@@ -10,7 +10,7 @@
 ## Services
 
 - `apps/web`: Next.js app with protected career dashboard, API routes, OpenAI calls, RAG retrieval, and Supabase persistence.
-- `services/knowledge/document-service`: Python FastAPI service with Docling for PDF/DOCX extraction.
+- `services/knowledge/document-service`: Python FastAPI service using `pypdfium2` and `python-docx` for PDF/DOCX extraction.
 - `services/knowledge/rag`: offline ingestion scripts for curated career guidance resources.
 - `supabase`: schema, RLS policies, and vector search functions.
 

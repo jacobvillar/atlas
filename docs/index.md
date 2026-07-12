@@ -58,3 +58,6 @@
 
 - [Deployment Infrastructure](deployment/infrastructure.md)
 - [Production](deployment/production.md)
+- [Demo Script](delivery/demo-script.md)
+- [Reflection](delivery/reflection.md)
+- [Submission Checklist](delivery/submission-checklist.md)

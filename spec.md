@@ -35,7 +35,7 @@ Atlas accepts a pasted job description for any role. Its initial career-path pre
 ## 3. Behavior Rules and Edge Cases
 
 1. Require authentication before extraction, analysis, report retrieval, question answering, or quest updates.
-2. Accept PDF and DOCX only. Reject an empty, unsupported, or oversized upload before it reaches Docling; return a clear error and do not save the file.
+2. Accept PDF and DOCX only. Reject an empty, unsupported, mismatched, or oversized upload before extraction; return a clear error and do not save the file.
 3. Show the extracted resume text for user review. Do not analyze unreviewed or empty resume text.
 4. Analyze only when a usable pasted job description or a supported selected career path is present. If a career path is selected, synthesize its representative role profile before the report call.
 5. Retrieve only curated resource chunks from Supabase `pgvector`. Never index a user's resume or use one user's data to answer another user's request.
@@ -52,7 +52,7 @@ Atlas accepts a pasted job description for any role. Its initial career-path pre
 | --- | --- |
 | Web application | Next.js App Router and TypeScript, deployed to Vercel. |
 | Authentication and data | Supabase Auth, PostgreSQL, Row Level Security, and `pgvector`. |
-| Document extraction | FastAPI and Docling document service, deployed to Render or Railway. |
+| Document extraction | FastAPI service using `pypdfium2` for PDFs and `python-docx` for DOCX files, deployed to Render or Railway. |
 | Generation | OpenAI `gpt-4o-mini` using server-side structured output. |
 | Retrieval | OpenAI `text-embedding-3-small` over a small, curated Markdown knowledge base. |
 | Persistence | Store report JSON, structured resume evidence, message history, and quest-progress state. Do not store uploaded files or full raw resume text. |
@@ -64,7 +64,7 @@ Atlas accepts a pasted job description for any role. Its initial career-path pre
 ```text
 Authenticated user
   -> Next.js web app
-  -> FastAPI + Docling (temporary resume extraction)
+  -> FastAPI document service (temporary PDF/DOCX extraction)
   -> user review of extracted text
   -> Supabase pgvector retrieval of curated guidance
   -> server-side OpenAI analysis
@@ -97,5 +97,5 @@ Core tables: `resume_documents`, `career_reports`, `roadmap_quest_progress`, `as
 
 - Unit-test validation, output schemas, prompt construction, RAG source metadata, quest XP/level logic, and idempotent completion.
 - API-test authentication, ownership checks, extraction input errors, analysis error handling, and Ask Atlas availability.
-- Test the Docling wrapper with file-validation cases and a mocked converter or fixture.
+- Test file validation and the extraction wrapper with a mocked parser or fixture.
 - Smoke-test the user journey: sign in, upload, review, analyze, view report, complete a quest, ask a question, and reopen the report.

@@ -90,7 +90,7 @@ atlas/
 - `apps/web/src/modules` contains product workflow modules: public site, auth, career dashboard, analysis workbench, readiness report, roadmap, Ask Atlas, and saved reports.
 - `apps/web/src/core` contains shared infrastructure code: auth helpers, Supabase clients, AI prompts/schemas, RAG retrieval, and validation.
 - `apps/web/src/components/ui` contains shared UI primitives only.
-- `services/knowledge/document-service` contains runtime resume extraction with FastAPI and Docling.
+- `services/knowledge/document-service` contains runtime resume extraction with FastAPI, `pypdfium2`, and `python-docx`.
 - `services/knowledge/rag` contains offline/admin ingestion helpers for curated career guidance resources.
 - `supabase/migrations` contains database schema, RLS policies, and vector search functions.
 - `docs` contains project deliverables, architecture notes, and implementation plans.

@@ -76,7 +76,7 @@ Jobscan's public product flow itself asks users to upload a resume, paste a job 
 | Output feels generic or incorrect | General LLM outputs can be vague, and public discussion of resume match tools shows users can distrust a score that does not reflect their context. | Require reviewed resume text and a role description; use structured output, retrieved guidance, source titles, and a guidance-only disclaimer. Pilot users must rate the next action as specific enough to attempt. |
 | Fit score is treated as a hiring prediction | Competing tools prominently use scores, while job outcomes remain uncertain. | Label the score as a readiness estimate, not an ATS or hiring prediction; never tie XP, badges, or quests to interview promises. |
 | Sensitive resume data is mishandled | Resumes contain personal data and work history. | Do not store uploaded files or full raw resume text; use Supabase RLS; never add private resumes to the shared RAG index; test cross-user access denial. |
-| Document extraction fails | PDF/DOCX resumes vary in structure. | Validate type and size before Docling; provide an editable review step and a recoverable error with paste-text fallback. |
+| Document extraction fails | PDF/DOCX resumes vary in structure. | Validate name, type, size, and content signature before extraction; provide an editable review step and a recoverable error with paste-text fallback. |
 | Gamification feels childish or unearned | Career preparation is consequential, and public scoring can create pressure. | Keep progression private, use no leaderboards or streak-loss mechanics, and keep the report professional. Pilot users must report that the campaign framing is motivating rather than distracting. |
 
 ## Evidence Register and Submission Checklist

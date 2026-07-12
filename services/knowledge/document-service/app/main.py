@@ -14,7 +14,7 @@ from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import JSONResponse
 
 from app.extraction import extract_resume
-from app.validation import validate_content, validate_upload
+from app.validation import validate_content, validate_file_metadata, validate_upload
 
 app = FastAPI(title="Atlas Document Service")
 
@@ -45,6 +45,7 @@ async def extract_resume_endpoint(
     max_mb = int(os.getenv("MAX_UPLOAD_MB", "5"))
     content_type = file.content_type or ""
     try:
+        validate_file_metadata(file.filename, content_type)
         validate_upload(
             content_type=content_type,
             size_bytes=len(content),
@@ -63,7 +64,7 @@ async def extract_resume_endpoint(
     try:
         tmp.write(content)
         tmp.close()
-        # Run blocking Docling extraction off the event loop so it doesn't
+        # Run blocking document extraction off the event loop so it doesn't
         # stall /api/health and other concurrent requests during conversion.
         extraction = await run_in_threadpool(extract_resume, Path(tmp.name))
     finally:

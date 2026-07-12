@@ -208,6 +208,6 @@ Rules:
 - Never call this service directly from browser code.
 - Reject unsupported MIME types.
 - Reject files over the configured size limit.
-- Use Docling to convert the document.
+- Validate the file name, MIME type, and content signature before converting the document.
 - Delete temporary files after extraction.
 - Return extracted content to the web app without storing the file.

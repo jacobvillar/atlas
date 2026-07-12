@@ -14,6 +14,10 @@ const TARGET_ROLE_MAX = 200;
 
 const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
 const ALLOWED_UPLOAD_EXTENSIONS = [".pdf", ".docx"];
+const MIME_TYPE_BY_EXTENSION: Record<string, string> = {
+  ".pdf": "application/pdf",
+  ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+};
 
 // v1 is soft-scoped to AI engineering; offer these as quick picks in
 // career-path mode. Users can still type any role.
@@ -119,10 +123,15 @@ export function AnalysisForm() {
     setUploadNotice(null);
 
     const nameLower = file.name.toLowerCase();
-    const hasAllowedExtension = ALLOWED_UPLOAD_EXTENSIONS.some((ext) =>
+    const extension = ALLOWED_UPLOAD_EXTENSIONS.find((ext) =>
       nameLower.endsWith(ext),
     );
-    if (!hasAllowedExtension) {
+    if (!extension) {
+      setUploadNotice("Upload unavailable — paste your resume instead.");
+      return;
+    }
+    const expectedType = MIME_TYPE_BY_EXTENSION[extension];
+    if (file.type && file.type !== expectedType) {
       setUploadNotice("Upload unavailable — paste your resume instead.");
       return;
     }
@@ -422,8 +431,9 @@ export function AnalysisForm() {
       </button>
 
       <p className="text-xs text-foreground-muted">
-        Resume files are not stored — only extracted text and report metadata
-        are saved. The fit score is guidance, not a hiring prediction.
+        Resume files and full raw resume text are not stored. Atlas saves your
+        report, target role, and structured resume evidence. The fit score is
+        guidance, not a hiring prediction.
       </p>
     </form>
   );

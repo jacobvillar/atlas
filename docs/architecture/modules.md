@@ -24,7 +24,7 @@ Atlas should start with a small set of product modules that map directly to the 
 | `core/ai` | `apps/web/src/core/ai` | OpenAI client, prompt builders, response schemas, output validation |
 | `core/rag` | `apps/web/src/core/rag` | Runtime retrieval helpers used by analysis and Ask Atlas |
 | `core/validation` | `apps/web/src/core/validation` | Shared Zod schemas and input limits |
-| `document-service` | `services/knowledge/document-service` | FastAPI + Docling PDF/DOCX extraction |
+| `document-service` | `services/knowledge/document-service` | FastAPI PDF/DOCX extraction with `pypdfium2` and `python-docx` |
 | `rag` | `services/knowledge/rag` | Curated career guidance ingestion, chunking, embeddings, Supabase vector upserts |
 
 ## Web App Folder Shape
@@ -112,7 +112,7 @@ MVP dashboard sections:
 - Milestone Badges: private, professional labels earned through completed quest categories.
 - Ask Atlas Entry: disabled until a report exists, then links to the report-specific chat.
 
-V1 includes lightweight progress tracking only: users can mark generated roadmap quests complete or incomplete and see milestone badges. Keep streaks, XP, leaderboards, competitive leagues, notifications, mascot nudges, and generic lessons out of scope.
+V1 includes private, per-report progression: users can mark generated roadmap quests complete or incomplete and see earned XP, readiness level, and milestone badges. Keep streaks, leaderboards, competitive leagues, notifications, mascot nudges, and generic lessons out of scope.
 
 ## Auth Module Scope
 

@@ -5,7 +5,7 @@ Atlas is an authenticated AI career-readiness web application. A user uploads a 
 ```mermaid
 flowchart LR
   User["Authenticated User"] --> UI["Next.js Web App"]
-  UI --> DocSvc["FastAPI Docling Service"]
+  UI --> DocSvc["FastAPI PDF/DOCX Extraction Service"]
   DocSvc --> UI
   UI --> API["Next.js API Routes"]
   API --> Supabase["Supabase Auth + DB + pgvector"]
@@ -22,7 +22,7 @@ flowchart LR
 1. User signs in with Supabase Auth.
 2. User uploads a PDF or DOCX resume.
 3. The web app sends the file to the Python document service.
-4. The document service uses Docling to extract text and returns it without storing the file.
+4. The document service extracts text with `pypdfium2` or `python-docx` and returns it without storing the file.
 5. User reviews and edits extracted resume text.
 6. User pastes a target job description or selects a supported career path, which is synthesized into a representative role profile.
 7. The web app retrieves relevant RAG chunks from Supabase `pgvector`.
@@ -43,7 +43,7 @@ Atlas uses two kinds of documents:
 ## Components
 
 - `apps/web`: sign-in, resume upload, extracted-text review, target-role entry, report rendering, roadmap quest progress, saved reports, and Ask Atlas.
-- `services/knowledge/document-service`: FastAPI service that uses Docling to extract text from PDF/DOCX resumes.
+- `services/knowledge/document-service`: FastAPI service that uses `pypdfium2` and `python-docx` to extract PDF/DOCX resume text.
 - `services/knowledge/rag`: offline ingestion and retrieval helpers for curated Markdown career guidance.
 - `supabase`: auth, user-owned reports/messages, row-level security, and `pgvector` retrieval.
 - OpenAI: `gpt-4o-mini` for generation and `text-embedding-3-small` for embeddings.
