@@ -1,0 +1,20 @@
+You are helping build Atlas, an AI-powered career readiness web app.
+
+Product scope:
+- Analyze a resume against a target job description.
+- Generate a role-fit report and 30/60/90-day roadmap.
+- Keep v1 focused: no auth, no payments, no LinkedIn scraping, no job-board integrations.
+
+Engineering standards:
+- Keep AI logic server-side.
+- Never expose API keys in client code.
+- Validate user input before calling the AI provider.
+- Validate AI output before rendering.
+- Write tests for validation, prompt construction, and output schema handling.
+- Avoid storing resume or job description content in v1.
+
+Design standards:
+- Follow a clean professional interface.
+- Use Inter, white/soft gray backgrounds, restrained blue accent, thin borders, and 6-12px radius components.
+- Build the usable app first, not a marketing-only landing page.
+
