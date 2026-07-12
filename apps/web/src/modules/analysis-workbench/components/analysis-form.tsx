@@ -9,10 +9,22 @@ const RESUME_MIN = 50;
 const RESUME_MAX = 20000;
 const JD_MIN = 50;
 const JD_MAX = 15000;
+const TARGET_ROLE_MIN = 3;
 const TARGET_ROLE_MAX = 200;
 
 const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
 const ALLOWED_UPLOAD_EXTENSIONS = [".pdf", ".docx"];
+
+// v1 is soft-scoped to AI engineering; offer these as quick picks in
+// career-path mode. Users can still type any role.
+const AI_ROLE_PRESETS = [
+  "AI Engineer",
+  "ML Engineer",
+  "LLM / Applied-AI Engineer",
+  "MLOps Engineer",
+];
+
+type Mode = "job_description" | "career_path";
 
 const textareaClass =
   "mt-1 w-full rounded-md border border-border-subtle bg-background px-3 py-2 text-sm text-foreground placeholder:text-foreground-muted focus:border-accent focus:outline-none";
@@ -36,6 +48,7 @@ export function AnalysisForm() {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [mode, setMode] = useState<Mode>("job_description");
   const [resumeText, setResumeText] = useState("");
   const [jobDescriptionText, setJobDescriptionText] = useState("");
   const [targetRole, setTargetRole] = useState("");
@@ -47,6 +60,20 @@ export function AnalysisForm() {
   const [uploadNotice, setUploadNotice] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [resumeDocumentId, setResumeDocumentId] = useState<string | null>(null);
+
+  const careerPath = mode === "career_path";
+
+  function switchMode(next: Mode) {
+    if (next === mode) return;
+    setMode(next);
+    setSubmitError(null);
+    // Clear the mode-specific field errors that no longer apply.
+    setFieldErrors((prev) => ({
+      ...prev,
+      jobDescriptionText: undefined,
+      targetRole: undefined,
+    }));
+  }
 
   function validate(): FieldErrors {
     const errors: FieldErrors = {};
@@ -60,14 +87,25 @@ export function AnalysisForm() {
       errors.resumeText = `Resume text is too long (max ${RESUME_MAX} characters).`;
     }
 
-    if (trimmedJd.length < JD_MIN) {
-      errors.jobDescriptionText = `Add more job description detail (at least ${JD_MIN} characters).`;
-    } else if (trimmedJd.length > JD_MAX) {
-      errors.jobDescriptionText = `Job description is too long (max ${JD_MAX} characters).`;
-    }
-
-    if (trimmedRole.length > TARGET_ROLE_MAX) {
-      errors.targetRole = `Target role is too long (max ${TARGET_ROLE_MAX} characters).`;
+    if (careerPath) {
+      // Career-path mode: a target role is required; the job description is
+      // synthesized server-side, so it is not collected here.
+      if (trimmedRole.length < TARGET_ROLE_MIN) {
+        errors.targetRole = `Enter a target role (at least ${TARGET_ROLE_MIN} characters).`;
+      } else if (trimmedRole.length > TARGET_ROLE_MAX) {
+        errors.targetRole = `Target role is too long (max ${TARGET_ROLE_MAX} characters).`;
+      }
+    } else {
+      // Job-description mode: a job description is required; target role is
+      // optional.
+      if (trimmedJd.length < JD_MIN) {
+        errors.jobDescriptionText = `Add more job description detail (at least ${JD_MIN} characters).`;
+      } else if (trimmedJd.length > JD_MAX) {
+        errors.jobDescriptionText = `Job description is too long (max ${JD_MAX} characters).`;
+      }
+      if (trimmedRole.length > TARGET_ROLE_MAX) {
+        errors.targetRole = `Target role is too long (max ${TARGET_ROLE_MAX} characters).`;
+      }
     }
 
     return errors;
@@ -139,17 +177,31 @@ export function AnalysisForm() {
       return;
     }
 
+    const trimmedRole = targetRole.trim();
+
+    // Career-path mode sends the role and omits the job description (the server
+    // synthesizes it). Job-description mode sends the JD and an optional role.
+    const payload = careerPath
+      ? {
+          mode,
+          resumeText: resumeText.trim(),
+          targetRole: trimmedRole,
+          ...(resumeDocumentId ? { resumeDocumentId } : {}),
+        }
+      : {
+          mode,
+          resumeText: resumeText.trim(),
+          jobDescriptionText: jobDescriptionText.trim(),
+          ...(trimmedRole ? { targetRole: trimmedRole } : {}),
+          ...(resumeDocumentId ? { resumeDocumentId } : {}),
+        };
+
     setSubmitting(true);
     try {
       const response = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          resumeText: resumeText.trim(),
-          jobDescriptionText: jobDescriptionText.trim(),
-          ...(targetRole.trim() ? { targetRole: targetRole.trim() } : {}),
-          ...(resumeDocumentId ? { resumeDocumentId } : {}),
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (response.status === 400) {
@@ -169,11 +221,6 @@ export function AnalysisForm() {
         return;
       }
 
-      if (response.status === 502) {
-        setSubmitError("Analysis failed. Please try again.");
-        return;
-      }
-
       if (!response.ok) {
         setSubmitError("Analysis failed. Please try again.");
         return;
@@ -188,8 +235,50 @@ export function AnalysisForm() {
     }
   }
 
+  const modeButtonClass = (active: boolean) =>
+    `flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+      active
+        ? "bg-accent text-white shadow-sm"
+        : "text-foreground-secondary hover:bg-background-tertiary"
+    }`;
+
   return (
     <form className="space-y-6" onSubmit={onSubmit}>
+      <div>
+        <span className="block text-sm font-medium text-foreground">
+          How do you want to target this analysis?
+        </span>
+        <div
+          role="tablist"
+          aria-label="Analysis input mode"
+          className="mt-1 flex gap-1 rounded-lg border border-border-subtle bg-background-secondary p-1"
+        >
+          <button
+            type="button"
+            role="tab"
+            aria-selected={!careerPath}
+            onClick={() => switchMode("job_description")}
+            className={modeButtonClass(!careerPath)}
+          >
+            Paste a job description
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={careerPath}
+            onClick={() => switchMode("career_path")}
+            className={modeButtonClass(careerPath)}
+          >
+            Choose a target role
+          </button>
+        </div>
+        <p className="mt-2 text-xs text-foreground-muted">
+          {careerPath
+            ? "No job posting yet? Atlas builds a representative profile for the role you choose."
+            : "Paste a specific job description for the most precise readiness report."}
+        </p>
+      </div>
+
       <div>
         <div className="flex items-center justify-between">
           <label htmlFor="resumeText" className="block text-sm font-medium text-foreground">
@@ -239,42 +328,47 @@ export function AnalysisForm() {
         </div>
       </div>
 
-      <div>
-        <div className="flex items-center justify-between">
-          <label
-            htmlFor="jobDescriptionText"
-            className="block text-sm font-medium text-foreground"
-          >
-            Job description
-          </label>
-          <span
-            className={`text-xs ${charCountClass(jobDescriptionText.trim().length, JD_MIN, JD_MAX)}`}
-          >
-            {jobDescriptionText.trim().length} / {JD_MAX}
-          </span>
+      {careerPath ? null : (
+        <div>
+          <div className="flex items-center justify-between">
+            <label
+              htmlFor="jobDescriptionText"
+              className="block text-sm font-medium text-foreground"
+            >
+              Job description
+            </label>
+            <span
+              className={`text-xs ${charCountClass(jobDescriptionText.trim().length, JD_MIN, JD_MAX)}`}
+            >
+              {jobDescriptionText.trim().length} / {JD_MAX}
+            </span>
+          </div>
+          <textarea
+            id="jobDescriptionText"
+            name="jobDescriptionText"
+            rows={10}
+            value={jobDescriptionText}
+            onChange={(e) => {
+              setJobDescriptionText(e.target.value);
+              setFieldErrors((prev) => ({ ...prev, jobDescriptionText: undefined }));
+            }}
+            placeholder="Paste the target job description here…"
+            className={textareaClass}
+          />
+          {fieldErrors.jobDescriptionText ? (
+            <p className="mt-1 text-sm text-red-600" role="alert">
+              {fieldErrors.jobDescriptionText}
+            </p>
+          ) : null}
         </div>
-        <textarea
-          id="jobDescriptionText"
-          name="jobDescriptionText"
-          rows={10}
-          value={jobDescriptionText}
-          onChange={(e) => {
-            setJobDescriptionText(e.target.value);
-            setFieldErrors((prev) => ({ ...prev, jobDescriptionText: undefined }));
-          }}
-          placeholder="Paste the target job description here…"
-          className={textareaClass}
-        />
-        {fieldErrors.jobDescriptionText ? (
-          <p className="mt-1 text-sm text-red-600" role="alert">
-            {fieldErrors.jobDescriptionText}
-          </p>
-        ) : null}
-      </div>
+      )}
 
       <div>
         <label htmlFor="targetRole" className="block text-sm font-medium text-foreground">
-          Target role <span className="text-foreground-muted">(optional)</span>
+          Target role{" "}
+          {careerPath ? null : (
+            <span className="text-foreground-muted">(optional)</span>
+          )}
         </label>
         <input
           id="targetRole"
@@ -285,9 +379,26 @@ export function AnalysisForm() {
             setTargetRole(e.target.value);
             setFieldErrors((prev) => ({ ...prev, targetRole: undefined }));
           }}
-          placeholder="e.g. Customer Success Manager"
+          placeholder="e.g. AI Engineer"
           className={inputClass}
         />
+        {careerPath ? (
+          <div className="mt-2 flex flex-wrap gap-2">
+            {AI_ROLE_PRESETS.map((role) => (
+              <button
+                key={role}
+                type="button"
+                onClick={() => {
+                  setTargetRole(role);
+                  setFieldErrors((prev) => ({ ...prev, targetRole: undefined }));
+                }}
+                className="rounded-full border border-border-subtle px-3 py-1 text-xs font-medium text-foreground-secondary transition-colors hover:bg-background-tertiary"
+              >
+                {role}
+              </button>
+            ))}
+          </div>
+        ) : null}
         {fieldErrors.targetRole ? (
           <p className="mt-1 text-sm text-red-600" role="alert">
             {fieldErrors.targetRole}
