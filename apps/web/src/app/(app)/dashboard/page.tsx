@@ -3,6 +3,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/core/supabase/server";
 import { SignOutButton } from "@/modules/auth/components/sign-out-button";
+import { NewAnalysisCard } from "@/modules/career-dashboard/components/new-analysis-card";
+import { DashboardEmptyState } from "@/modules/career-dashboard/components/dashboard-empty-state";
+import {
+  RecentReports,
+  type RecentReport,
+} from "@/modules/career-dashboard/components/recent-reports";
+import { DashboardSection } from "@/modules/career-dashboard/components/dashboard-section";
+import { ActiveQuestsPreview } from "@/modules/career-dashboard/components/active-quests-preview";
+import { RoadmapProgress } from "@/modules/career-dashboard/components/roadmap-progress";
+import { MilestoneBadges } from "@/modules/career-dashboard/components/milestone-badges";
 
 // Protected by proxy.ts; this second check is defense-in-depth and gives us the
 // authenticated user for the greeting.
@@ -15,6 +25,16 @@ export default async function DashboardPage() {
   if (!user) {
     redirect("/login");
   }
+
+  // RLS scopes this to the authenticated user; no extra filter needed.
+  const { data: reports } = await supabase
+    .from("career_reports")
+    .select("id, target_role, fit_score, created_at")
+    .order("created_at", { ascending: false })
+    .limit(5);
+
+  const recentReports = (reports ?? []) as RecentReport[];
+  const hasReports = recentReports.length > 0;
 
   return (
     <div className="min-h-full bg-background-secondary">
@@ -40,11 +60,46 @@ export default async function DashboardPage() {
           map your next move.
         </p>
 
-        <div className="mt-8 rounded-lg border border-border-subtle bg-background p-8 text-center">
-          <p className="text-sm text-foreground-secondary">
-            You have no reports yet. Analysis, reports, and roadmap quests arrive
-            in the next slices.
-          </p>
+        <div className="mt-8">
+          <NewAnalysisCard />
+        </div>
+
+        <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <DashboardSection
+              title="Recent reports"
+              description="Your latest saved readiness reports."
+            >
+              {hasReports ? (
+                <RecentReports reports={recentReports} />
+              ) : (
+                <DashboardEmptyState />
+              )}
+            </DashboardSection>
+          </div>
+
+          <div className="flex flex-col gap-6">
+            <DashboardSection
+              title="Active quest preview"
+              description="Top roadmap quests from your latest report."
+            >
+              <ActiveQuestsPreview />
+            </DashboardSection>
+
+            <DashboardSection
+              title="Roadmap progress"
+              description="Completion across your latest report's quests."
+            >
+              <RoadmapProgress />
+            </DashboardSection>
+
+            <DashboardSection
+              title="Milestone badges"
+              description="Earned by completing quest categories."
+            >
+              <MilestoneBadges />
+            </DashboardSection>
+          </div>
         </div>
       </main>
     </div>
