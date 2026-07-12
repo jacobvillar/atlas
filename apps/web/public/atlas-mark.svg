@@ -1,0 +1,13 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Atlas mark</title>
+  <desc id="desc">Compass route mark for Atlas.</desc>
+  <rect width="128" height="128" rx="28" fill="#FFFFFF"/>
+  <circle cx="64" cy="58" r="48" fill="#F8F9FB" stroke="#D8E3EC" stroke-width="2"/>
+  <path d="M64 16C78.4 40.8 89.2 51.6 114 66C89.2 80.4 78.4 91.2 64 116C49.6 91.2 38.8 80.4 14 66C38.8 51.6 49.6 40.8 64 16Z" fill="#0B73B9"/>
+  <path d="M64 36L77.5 68.5L45.5 80.5L58 49.5L64 36Z" fill="#FFFFFF"/>
+  <circle cx="64" cy="66" r="5.5" fill="#0A0C10"/>
+  <path d="M36 105C58 92 74 91 95 103" stroke="#0B73B9" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="48" cy="99" r="4.5" fill="#FFFFFF" stroke="#0B73B9" stroke-width="2"/>
+  <circle cx="66" cy="95" r="4.5" fill="#FFFFFF" stroke="#0B73B9" stroke-width="2"/>
+  <circle cx="86" cy="98" r="4.5" fill="#FFFFFF" stroke="#0B73B9" stroke-width="2"/>
+</svg>
