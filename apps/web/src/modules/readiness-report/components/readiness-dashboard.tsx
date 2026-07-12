@@ -1,8 +1,7 @@
 import type { ReportJson } from "@/core/ai/schemas";
-import type { Progression } from "@/core/gamification/levels";
-import type { Badge } from "@/core/gamification/badges";
 import { ReportSection } from "./report-section";
 import { CopyMarkdownButton } from "./copy-markdown-button";
+import { InteractiveRoadmap } from "@/modules/roadmap/components/interactive-roadmap";
 import { reportToMarkdown } from "../export/markdown";
 
 const STATUS_STYLES: Record<
@@ -23,29 +22,22 @@ const STATUS_STYLES: Record<
   },
 };
 
-const PHASE_LABELS: Record<ReportJson["roadmapQuests"][number]["phase"], string> = {
-  "30": "First 30 days",
-  "60": "Next 60 days",
-  "90": "By 90 days",
-};
-
-const PHASES = ["30", "60", "90"] as const;
-
 interface ReadinessDashboardProps {
   report: ReportJson;
   createdAt: string;
-  progression: Progression;
-  badges: Badge[];
+  reportId: string;
+  initialCompletedQuestIds: string[];
 }
 
-// Scannable, read-only rendering of a saved readiness report. Quest
-// completion toggles and live XP updates are ATLAS-009 — progression and
-// badges here are computed server-side and passed in as props.
+// Scannable rendering of a saved readiness report. Quest completion,
+// progression (XP/rank), and milestone badges are interactive (ATLAS-009) and
+// live in InteractiveRoadmap, which recomputes them client-side on every
+// toggle from the pure gamification modules.
 export function ReadinessDashboard({
   report,
   createdAt,
-  progression,
-  badges,
+  reportId,
+  initialCompletedQuestIds,
 }: ReadinessDashboardProps) {
   const markdown = reportToMarkdown({ ...report, createdAt });
   const createdLabel = new Date(createdAt).toLocaleDateString(undefined, {
@@ -87,48 +79,6 @@ export function ReadinessDashboard({
             </div>
             <CopyMarkdownButton markdown={markdown} />
           </div>
-        </div>
-      </section>
-
-      <section className="rounded-lg border border-border-subtle bg-background p-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h2 className="text-sm font-semibold text-foreground">
-              {progression.rankName}
-            </h2>
-            <p className="mt-1 text-sm text-foreground-secondary">
-              {progression.earnedXp} / {progression.totalXp} xp earned (
-              {progression.percent}%)
-            </p>
-          </div>
-        </div>
-
-        <div
-          className="mt-4 h-2 w-full overflow-hidden rounded-full bg-background-tertiary"
-          role="progressbar"
-          aria-valuenow={progression.percent}
-          aria-valuemin={0}
-          aria-valuemax={100}
-        >
-          <div
-            className="h-full rounded-full bg-accent"
-            style={{ width: `${progression.percent}%` }}
-          />
-        </div>
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          {badges.map((badge) => (
-            <span
-              key={badge.id}
-              className={
-                badge.earned
-                  ? "rounded-full border border-border-subtle bg-accent/10 px-3 py-1 text-xs font-medium text-accent"
-                  : "rounded-full border border-border-subtle bg-background-secondary px-3 py-1 text-xs font-medium text-foreground-muted"
-              }
-            >
-              {badge.name}
-            </span>
-          ))}
         </div>
       </section>
 
@@ -206,46 +156,11 @@ export function ReadinessDashboard({
         </ul>
       </ReportSection>
 
-      <ReportSection
-        title="Roadmap quests"
-        description="A 30/60/90-day plan to close gaps and build proof."
-      >
-        <div className="flex flex-col gap-6">
-          {PHASES.map((phase) => {
-            const quests = report.roadmapQuests.filter(
-              (quest) => quest.phase === phase,
-            );
-            if (quests.length === 0) return null;
-            return (
-              <div key={phase}>
-                <h3 className="text-xs font-semibold uppercase tracking-wide text-foreground-muted">
-                  {PHASE_LABELS[phase]}
-                </h3>
-                <ul className="mt-3 flex flex-col gap-3">
-                  {quests.map((quest) => (
-                    <li
-                      key={quest.questId}
-                      className="rounded-md border border-border-subtle bg-background-secondary p-3"
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <p className="text-sm font-medium text-foreground">
-                          {quest.title}
-                        </p>
-                        <span className="shrink-0 rounded-full bg-background-tertiary px-2 py-0.5 text-xs font-medium text-foreground-muted">
-                          {quest.xp} xp
-                        </span>
-                      </div>
-                      <p className="mt-1 text-sm text-foreground-secondary">
-                        {quest.description}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            );
-          })}
-        </div>
-      </ReportSection>
+      <InteractiveRoadmap
+        reportId={reportId}
+        quests={report.roadmapQuests}
+        initialCompletedQuestIds={initialCompletedQuestIds}
+      />
 
       <ReportSection title="Sources">
         {report.sources.length === 0 ? (

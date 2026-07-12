@@ -4,8 +4,6 @@ import Link from "next/link";
 import { createClient } from "@/core/supabase/server";
 import { getReportForUser } from "@/modules/reports/queries/get-report";
 import { ReadinessDashboard } from "@/modules/readiness-report/components/readiness-dashboard";
-import { computeProgression } from "@/core/gamification/levels";
-import { computeBadges } from "@/core/gamification/badges";
 
 interface ReportPageProps {
   params: Promise<{ id: string }>;
@@ -13,7 +11,9 @@ interface ReportPageProps {
 
 // Protected by proxy.ts (/reports prefix); this second check is
 // defense-in-depth, matching the dashboard page's pattern. Quest completion
-// toggles and live XP are ATLAS-009 — this page renders read-only.
+// toggling, live XP, and badges (ATLAS-009) are interactive and live in
+// ReadinessDashboard/InteractiveRoadmap — this page fetches once server-side
+// and hands off the initial completed-quest set as a starting point.
 export default async function ReportPage({ params }: ReportPageProps) {
   const { id } = await params;
 
@@ -33,9 +33,6 @@ export default async function ReportPage({ params }: ReportPageProps) {
   }
 
   const { report, completedQuestIds } = result;
-  const quests = report.report_json.roadmapQuests;
-  const progression = computeProgression(quests, completedQuestIds);
-  const badges = computeBadges(quests, completedQuestIds);
 
   return (
     <div className="min-h-full bg-background-secondary">
@@ -58,8 +55,8 @@ export default async function ReportPage({ params }: ReportPageProps) {
         <ReadinessDashboard
           report={report.report_json}
           createdAt={report.created_at}
-          progression={progression}
-          badges={badges}
+          reportId={report.id}
+          initialCompletedQuestIds={Array.from(completedQuestIds)}
         />
       </main>
     </div>

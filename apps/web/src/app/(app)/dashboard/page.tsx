@@ -13,6 +13,10 @@ import { DashboardSection } from "@/modules/career-dashboard/components/dashboar
 import { ActiveQuestsPreview } from "@/modules/career-dashboard/components/active-quests-preview";
 import { RoadmapProgress } from "@/modules/career-dashboard/components/roadmap-progress";
 import { MilestoneBadges } from "@/modules/career-dashboard/components/milestone-badges";
+import { computeProgression } from "@/core/gamification/levels";
+import { computeBadges } from "@/core/gamification/badges";
+import { todaysQuests } from "@/core/gamification/today";
+import type { ReportJson } from "@/core/ai/schemas";
 
 // Protected by proxy.ts; this second check is defense-in-depth and gives us the
 // authenticated user for the greeting.
@@ -35,6 +39,40 @@ export default async function DashboardPage() {
 
   const recentReports = (reports ?? []) as RecentReport[];
   const hasReports = recentReports.length > 0;
+
+  // Most recent report drives the quest-preview, progress, and badge widgets.
+  // These are read-only snapshots — interaction happens on the report page
+  // (ATLAS-009).
+  const latestReportId = recentReports[0]?.id ?? null;
+
+  let latestReportJson: ReportJson | null = null;
+  if (latestReportId) {
+    const { data: latestReport } = await supabase
+      .from("career_reports")
+      .select("report_json")
+      .eq("id", latestReportId)
+      .maybeSingle();
+    latestReportJson = (latestReport?.report_json as ReportJson) ?? null;
+  }
+
+  let completedQuestIds = new Set<string>();
+  if (latestReportId) {
+    const { data: progress } = await supabase
+      .from("roadmap_quest_progress")
+      .select("quest_id")
+      .eq("career_report_id", latestReportId)
+      .eq("status", "completed");
+    completedQuestIds = new Set((progress ?? []).map((row) => row.quest_id as string));
+  }
+
+  const latestQuests = latestReportJson?.roadmapQuests ?? [];
+  const progression = latestReportJson
+    ? computeProgression(latestQuests, completedQuestIds)
+    : null;
+  const badges = latestReportJson ? computeBadges(latestQuests, completedQuestIds) : null;
+  const nextQuests = latestReportJson
+    ? todaysQuests(latestQuests, completedQuestIds)
+    : [];
 
   return (
     <div className="min-h-full bg-background-secondary">
@@ -83,21 +121,21 @@ export default async function DashboardPage() {
               title="Active quest preview"
               description="Top roadmap quests from your latest report."
             >
-              <ActiveQuestsPreview />
+              <ActiveQuestsPreview reportId={latestReportId} quests={nextQuests} />
             </DashboardSection>
 
             <DashboardSection
               title="Roadmap progress"
               description="Completion across your latest report's quests."
             >
-              <RoadmapProgress />
+              <RoadmapProgress progression={progression} />
             </DashboardSection>
 
             <DashboardSection
               title="Milestone badges"
               description="Earned by completing quest categories."
             >
-              <MilestoneBadges />
+              <MilestoneBadges badges={badges} />
             </DashboardSection>
           </div>
         </div>
