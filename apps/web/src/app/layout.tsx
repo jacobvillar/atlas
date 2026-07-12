@@ -10,7 +10,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Atlas — Map your next career move.",
   description:
-    "Atlas compares your resume to a target job description, shows role readiness, and turns the gaps into practical 30/60/90-day career quests.",
+    "Atlas compares your resume to a target job description, then turns the gaps into a role-specific Career Campaign of practical 30/60/90-day missions.",
 };
 
 export default function RootLayout({

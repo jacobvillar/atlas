@@ -4,167 +4,183 @@ import { PublicShell } from "@/modules/public-site";
 
 const workflowSteps = [
   {
-    title: "Upload your resume",
-    description:
-      "Upload a PDF or DOCX resume, or paste your resume text as a fallback.",
+    step: "01",
+    title: "Bring your resume",
+    description: "Upload a PDF or DOCX, then review the extracted text before analysis.",
   },
   {
-    title: "Paste a job description",
-    description:
-      "Paste the job description for the role you are targeting next.",
+    step: "02",
+    title: "Choose a target role",
+    description: "Paste one real job description you want to work toward next.",
   },
   {
-    title: "Review your readiness dashboard",
-    description:
-      "See your fit score, matched strengths, priority gaps, and resume improvements.",
+    step: "03",
+    title: "Launch your campaign",
+    description: "See matched evidence, priority gaps, and a role-specific mission path.",
   },
-  {
-    title: "Work your roadmap quests",
-    description:
-      "Complete 30/60/90-day quests, track progress, and ask Atlas follow-up questions.",
-  },
-];
-
-const dashboardPreviewItems = [
-  { label: "Fit score", detail: "A guidance score, not a hiring prediction." },
-  { label: "Matched strengths", detail: "Evidence pulled from your resume." },
-  { label: "Priority gaps", detail: "What to close before you apply." },
-  { label: "Roadmap quests", detail: "30/60/90-day practical next steps." },
 ];
 
 const trustItems = [
-  "We do not store your uploaded resume file.",
-  "We do not store your full raw resume text.",
-  "Your reports and Ask Atlas chats are private to your account.",
+  "Resume files are processed, then discarded.",
+  "Full raw resume text is not saved.",
+  "Reports, missions, and Ask Atlas chats are private to your account.",
 ];
+
+function CampaignPreview() {
+  return (
+    <div className="campaign-preview" aria-label="Example Atlas Career Campaign">
+      <div className="campaign-preview__header">
+        <div>
+          <p className="campaign-preview__eyebrow">YOUR CAREER CAMPAIGN</p>
+          <h2>Junior Product Analyst</h2>
+        </div>
+        <div className="campaign-preview__tier">
+          <span>Tier 2</span>
+          <strong>Builder</strong>
+        </div>
+      </div>
+
+      <div className="campaign-preview__score-row">
+        <div className="campaign-preview__score" aria-label="Readiness score 68 out of 100">
+          <span>68</span>
+          <small>readiness</small>
+        </div>
+        <div>
+          <p className="campaign-preview__eyebrow">CAMPAIGN PROGRESS</p>
+          <p className="campaign-preview__progress-copy">2 of 7 missions complete</p>
+          <div className="campaign-preview__progress-track" aria-hidden="true">
+            <span />
+          </div>
+        </div>
+      </div>
+
+      <div className="campaign-preview__mission">
+        <div className="campaign-preview__mission-topline">
+          <span className="campaign-preview__status-dot" />
+          <span>Current mission</span>
+          <span>30 min</span>
+        </div>
+        <h3>Add evidence for stakeholder reporting</h3>
+        <p>
+          Turn one relevant project into a measurable resume bullet for this role.
+        </p>
+        <div className="campaign-preview__mission-footer">
+          <span>Evidence: revised bullet</span>
+          <span className="campaign-preview__start">Start mission</span>
+        </div>
+      </div>
+
+      <div className="campaign-preview__path" aria-label="Three phase career mission path">
+        <div className="campaign-preview__path-line" aria-hidden="true" />
+        <div className="campaign-preview__checkpoint campaign-preview__checkpoint--complete">
+          <span>1</span>
+          <strong>30 days</strong>
+          <small>Foundation</small>
+        </div>
+        <div className="campaign-preview__checkpoint campaign-preview__checkpoint--active">
+          <span>2</span>
+          <strong>60 days</strong>
+          <small>Build proof</small>
+        </div>
+        <div className="campaign-preview__checkpoint">
+          <span>3</span>
+          <strong>90 days</strong>
+          <small>Apply ready</small>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   return (
     <PublicShell>
-      <section className="border-b border-border-subtle bg-background-secondary">
-        <div className="mx-auto flex max-w-6xl flex-col items-start gap-8 px-6 py-20">
-          <Image
-            src="/atlas-mark.svg"
-            alt="Atlas"
-            width={56}
-            height={56}
-            priority
-          />
-          <div className="flex flex-col gap-4">
-            <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-              Map your next career move.
-            </h1>
-            <p className="max-w-xl text-lg text-foreground-secondary">
-              Compare your resume to a real target role and turn the gaps
-              into practical 30/60/90-day career quests.
+      <section className="atlas-hero">
+        <div className="atlas-hero__grid">
+          <div className="atlas-hero__copy">
+            <div className="atlas-hero__kicker">
+              <Image src="/atlas-mark.svg" alt="" width={30} height={30} priority />
+              <span>AI career readiness coach</span>
+            </div>
+            <h1>Turn your next role into a campaign worth completing.</h1>
+            <p>
+              Atlas compares your resume with a real job description, then maps the gaps into clear missions, milestones, and evidence you can build.
+            </p>
+            <div className="atlas-hero__actions">
+              <Link href="/signup" className="atlas-button atlas-button--primary">
+                Start your campaign
+              </Link>
+              <Link href="/use-cases" className="atlas-button atlas-button--quiet">
+                Explore use cases
+              </Link>
+            </div>
+            <p className="atlas-hero__note">
+              Guidance for your next move, never a hiring prediction.
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-4">
-            <Link
-              href="/signup"
-              className="rounded-md bg-accent px-5 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-accent-hover"
-            >
-              Sign up for free
-            </Link>
-            <Link
-              href="/login"
-              className="rounded-md border border-border-subtle bg-background px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-background-tertiary"
-            >
-              Login
-            </Link>
-          </div>
+          <CampaignPreview />
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-16">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-foreground-muted">
-          How it works
-        </h2>
-        <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {workflowSteps.map((step, index) => (
-            <div
-              key={step.title}
-              className="rounded-lg border border-border-subtle bg-background p-5"
-            >
-              <span className="text-xs font-medium text-accent">
-                Step {index + 1}
-              </span>
-              <h3 className="mt-2 text-base font-semibold text-foreground">
-                {step.title}
-              </h3>
-              <p className="mt-2 text-sm text-foreground-secondary">
-                {step.description}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="border-y border-border-subtle bg-background-secondary">
-        <div className="mx-auto max-w-6xl px-6 py-16">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-foreground-muted">
-            Your readiness dashboard
-          </h2>
-          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {dashboardPreviewItems.map((item) => (
-              <div
-                key={item.label}
-                className="rounded-lg border border-border-subtle bg-background p-5"
-              >
-                <h3 className="text-base font-semibold text-foreground">
-                  {item.label}
-                </h3>
-                <p className="mt-2 text-sm text-foreground-secondary">
-                  {item.detail}
-                </p>
-              </div>
-            ))}
-          </div>
-          <p className="mt-6 max-w-2xl text-sm text-foreground-muted">
-            Use the fit score and roadmap as guidance, not a hiring
-            prediction.
+      <section className="atlas-section atlas-section--workflow">
+        <div className="atlas-section__heading">
+          <p className="atlas-section__eyebrow">FROM RESUME TO MOMENTUM</p>
+          <h2>One role. One focused path forward.</h2>
+          <p>
+            Atlas keeps the work concrete, so you always know what to do next and why it matters.
           </p>
         </div>
+        <ol className="workflow-list">
+          {workflowSteps.map((step) => (
+            <li key={step.step} className="workflow-list__item">
+              <span>{step.step}</span>
+              <h3>{step.title}</h3>
+              <p>{step.description}</p>
+            </li>
+          ))}
+        </ol>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-16">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-foreground-muted">
-          Built with your privacy in mind
-        </h2>
-        <ul className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-          {trustItems.map((item) => (
-            <li
-              key={item}
-              className="rounded-lg border border-border-subtle bg-background p-5 text-sm text-foreground-secondary"
-            >
-              {item}
+      <section className="atlas-section atlas-section--promise">
+        <div className="campaign-promise">
+          <div>
+            <p className="atlas-section__eyebrow">A BETTER WAY TO USE AI CAREER ADVICE</p>
+            <h2>Less chat scroll. More visible progress.</h2>
+          </div>
+          <div className="campaign-promise__points">
+            <p><strong>Current mission</strong> A single high-impact action, not an overwhelming list.</p>
+            <p><strong>Evidence first</strong> Each mission points to a resume bullet, work sample, practice answer, or outreach action.</p>
+            <p><strong>Private milestones</strong> Progress belongs to your campaign and never promises an interview or offer.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="atlas-section atlas-section--trust">
+        <div className="atlas-section__heading">
+          <p className="atlas-section__eyebrow">BUILT FOR SENSITIVE CAREER WORK</p>
+          <h2>Your progress should feel personal, not exposed.</h2>
+        </div>
+        <ul className="trust-list">
+          {trustItems.map((item, index) => (
+            <li key={item}>
+              <span>0{index + 1}</span>
+              <p>{item}</p>
             </li>
           ))}
         </ul>
-        <p className="mt-4 text-sm text-foreground-muted">
-          Read the full{" "}
-          <Link href="/privacy" className="text-accent hover:text-accent-hover">
-            privacy commitments
-          </Link>
-          .
-        </p>
+        <Link href="/privacy" className="atlas-inline-link">
+          Read privacy commitments <span aria-hidden="true">→</span>
+        </Link>
       </section>
 
-      <section className="border-t border-border-subtle bg-background-secondary">
-        <div className="mx-auto flex max-w-6xl flex-col items-start gap-4 px-6 py-16">
-          <h2 className="text-2xl font-semibold tracking-tight text-foreground">
-            Ready to map your next move?
-          </h2>
-          <p className="max-w-xl text-sm text-foreground-secondary">
-            Create a free account to generate your first readiness report.
-          </p>
-          <Link
-            href="/signup"
-            className="rounded-md bg-accent px-5 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-accent-hover"
-          >
-            Sign up for free
-          </Link>
+      <section className="atlas-final-cta">
+        <div>
+          <p className="atlas-section__eyebrow">YOUR NEXT CHECKPOINT</p>
+          <h2>Map the move you want to make next.</h2>
         </div>
+        <Link href="/signup" className="atlas-button atlas-button--primary">
+          Start for free
+        </Link>
       </section>
     </PublicShell>
   );
