@@ -5,6 +5,8 @@ interface ReportSectionProps {
   description?: string;
   action?: ReactNode;
   children: ReactNode;
+  id?: string;
+  className?: string;
 }
 
 // Reusable titled section card for the readiness report, matching
@@ -14,9 +16,16 @@ export function ReportSection({
   description,
   action,
   children,
+  id,
+  className,
 }: ReportSectionProps) {
   return (
-    <section className="rounded-lg border border-border-subtle bg-background p-6">
+    <section
+      id={id}
+      className={`rounded-lg border border-border-subtle bg-background p-6${
+        className ? ` ${className}` : ""
+      }`}
+    >
       <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="text-sm font-semibold text-foreground">{title}</h2>

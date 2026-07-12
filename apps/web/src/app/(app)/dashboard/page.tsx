@@ -1,8 +1,5 @@
 import { redirect } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
 import { createClient } from "@/core/supabase/server";
-import { SignOutButton } from "@/modules/auth/components/sign-out-button";
 import { NewAnalysisCard } from "@/modules/career-dashboard/components/new-analysis-card";
 import { DashboardEmptyState } from "@/modules/career-dashboard/components/dashboard-empty-state";
 import {
@@ -75,21 +72,7 @@ export default async function DashboardPage() {
     : [];
 
   return (
-    <div className="min-h-full bg-background-secondary">
-      <header className="border-b border-border-subtle bg-background">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <Image src="/atlas-mark.svg" alt="Atlas" width={28} height={28} />
-            <span className="text-sm font-semibold text-foreground">Atlas</span>
-          </Link>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-foreground-muted">{user.email}</span>
-            <SignOutButton />
-          </div>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-5xl px-6 py-10">
+    <main className="mx-auto max-w-5xl px-6 py-10">
         <h1 className="text-2xl font-semibold tracking-tight text-foreground">
           Your career dashboard
         </h1>
@@ -139,7 +122,6 @@ export default async function DashboardPage() {
             </DashboardSection>
           </div>
         </div>
-      </main>
-    </div>
+    </main>
   );
 }

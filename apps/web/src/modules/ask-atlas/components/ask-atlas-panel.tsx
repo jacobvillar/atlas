@@ -75,6 +75,8 @@ export function AskAtlasPanel({ reportId, initialMessages }: AskAtlasPanelProps)
 
   return (
     <ReportSection
+      id="ask-atlas"
+      className="scroll-mt-20"
       title="Ask Atlas"
       description="Ask a follow-up question about this report. Answers are guidance, grounded in your report."
     >
