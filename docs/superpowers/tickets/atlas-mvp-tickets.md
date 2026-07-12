@@ -4,7 +4,9 @@ These tickets break the Atlas MVP into vertical slices that can be picked up by 
 
 Direction: Atlas is a gamified career coach, roadmap, and tracker that turns career readiness into an adventure — users complete quests, earn XP, and level up their readiness rank. v1 is themed around AI/ML engineering readiness (AI Engineer, ML Engineer, LLM/Applied-AI Engineer, MLOps Engineer); the analysis engine stays general (SOFT scope — accepts any resume + JD), while curated RAG content, career-path presets, example copy, and the capstone demo center on AI engineering. Broad job market is v2. Hype framing ("level up IRL," "aura," "evolve") lives in landing, onboarding, and the quest board; the readiness report itself stays calm and credible. Non-negotiables hold: Supabase auth required before analysis; no uploaded resume files or full raw resume text stored; fit score is guidance, not a hiring prediction; XP/levels/rewards are in-app progression only and never imply guaranteed interviews, offers, or hiring outcomes.
 
-Status note: ATLAS-001 through ATLAS-006 are implemented in code, but 006 covers **pasted-job-description mode with a non-XP report schema only**. The two capabilities the gamified/AI-engineer pivot introduced are NOT yet built: **career-path role-profile synthesis (ATLAS-006A)** and the **XP/levels data model (ATLAS-009A)**. These are new tickets below, not wording changes.
+Status note: ATLAS-001 through ATLAS-006 are implemented in code, with two carve-outs. (1) 006 covers **pasted-job-description mode with a non-XP report schema only**; career-path synthesis is ATLAS-006A and the XP/levels model is ATLAS-009A. (2) **ATLAS-004's web half was never built** — the Python document service exists and is tested, but the `/api/extract-resume` web proxy and upload/review UI do not; that gap is folded into ATLAS-007 (upload is fail-soft: paste always works even if the document service is not configured).
+
+Architecture decisions (locked): XP is server-assigned by phase (30→50, 60→75, 90→100), never model-generated. Per-report progression computed on read; level = percent of the report's total XP (0/25/50/75/100% → Base Camp, Explorer, Pathfinder, Trailblazer, Summit Ready). Badges earned when all quests in a category complete (resume→Resume Ready, skills→Skill Builder, projects→Proof Added, networking→Outreach Ready, interview→Interview Ready). `report_json` gains `inputMode` ("job_description" | "career_path") — jsonb, no migration. Old pre-XP reports render with missing xp as 0.
 
 Revision note (this pass): added ATLAS-006A and ATLAS-009A; corrected the completeness claim above; reordered so the analysis output shape is finalized before any report-render UI; added a "Review: Gaps, Assumptions, and Agent Safety" section at the end.
 
@@ -322,6 +324,16 @@ Type: `AFK`
 
 Build the guided UI for one complete analysis: resume review, job description input, target role, and generate report action.
 
+### Status (this pass)
+
+**JD-mode shipped.** Implemented: `/analysis/new` (protected, defense-in-depth auth check), the resume/job-description/target-role form with client-side validation mirroring `core/validation/analyze.ts` bounds, and the previously-missing web half of ATLAS-004 — the `/api/extract-resume` proxy plus an optional PDF/DOCX upload control that fills the resume textarea for user review before submit.
+
+- `/api/extract-resume` is an authenticated route that validates file type/size, forwards the upload to the Python document service (`${DOCUMENT_SERVICE_URL}/extract-resume`, `x-api-key` header when `DOCUMENT_SERVICE_API_KEY` is set), and inserts a `resume_documents` metadata row (file name, file type, `extraction_status: "completed"`) for the authenticated user. It never stores or logs extracted text or file contents. Returns `503 { error: "Document service not configured" }` when `DOCUMENT_SERVICE_URL` is unset.
+- Upload is **fail-soft by design**: any client-side validation failure (wrong extension, >5MB), non-2xx from the proxy, missing extracted text, or a network error surfaces "Upload unavailable — paste your resume instead" and leaves the paste textarea fully usable. Paste remains the primary, always-available path.
+- Generate submits JSON to the existing `/api/analyze`; success navigates to `/reports/[reportId]` (that page 404s until ATLAS-008 — expected).
+
+**Career-path mode is deferred.** The role-only input mode (no separate JD paste, AI-engineering presets) described below is out of scope for this pass and lands after ATLAS-006A ships `synthesizeRoleProfile`; there is no mode toggle in the UI yet, and the JD field is currently required.
+
 ### Expected Output
 
 - `/analysis/new` is protected.
@@ -339,6 +351,7 @@ Build the guided UI for one complete analysis: resume review, job description in
 - `apps/web/src/modules/analysis-workbench/actions/`
 - `apps/web/src/core/validation/analyze.ts`
 - `apps/web/src/modules/career-dashboard/components/`
+- `apps/web/src/app/api/extract-resume/route.ts`
 
 ### Dependencies
 
@@ -348,6 +361,7 @@ Build the guided UI for one complete analysis: resume review, job description in
 ### Blockers
 
 - None after API and extraction flow are available.
+- Career-path mode UI is blocked on ATLAS-006A's `synthesizeRoleProfile`.
 
 ### Human Review
 
