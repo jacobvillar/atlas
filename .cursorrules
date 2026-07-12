@@ -7,7 +7,7 @@ Product scope:
 - Atlas can show professional milestone badges computed from completed quest categories.
 - Ask Atlas is available only after the first analysis and uses the current report, structured resume evidence, quest progress, and RAG context.
 - v1 excludes payments, LinkedIn scraping, job-board integrations, automated applications, and hiring guarantees.
-- v1 excludes streaks, XP economy, leaderboards, competitive leagues, push notifications, mascot-led nudges, daily lessons, and generic curriculum paths.
+- v1 includes private, per-report quest XP, readiness levels, and milestone badges. It excludes streaks, leaderboards, competitive leagues, push notifications, mascot-led nudges, daily lessons, and generic curriculum paths.
 
 Stack:
 - Next.js + TypeScript + Tailwind in apps/web.

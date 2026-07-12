@@ -96,7 +96,7 @@ Rules:
 - Completion is user-controlled.
 - Completing quests does not automatically change the original fit score.
 - Milestone badges are computed from quest categories and completion state.
-- No streaks, XP, leaderboard, league, notification, or mascot-nudge data is stored in v1.
+- XP is assigned to each generated quest in `report_json` and recomputed from the report's persisted quest-completion rows. Atlas does not keep a separate user XP balance, streak, leaderboard, league, notification, or mascot-nudge record in v1.
 
 ## Ask Atlas Messages
 

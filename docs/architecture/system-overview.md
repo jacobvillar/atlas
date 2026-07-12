@@ -1,6 +1,6 @@
 # System Overview
 
-Atlas is an authenticated AI career readiness web application. A user uploads a resume, reviews extracted text, pastes a target job description, and receives a structured report with personalized roadmap quests grounded by a curated career guidance knowledge base.
+Atlas is an authenticated AI career-readiness web application. A user uploads a resume, reviews extracted text, supplies a target job description or supported career path, and receives a structured report with personalized roadmap quests grounded by a curated career-guidance knowledge base. See [Architecture Notes](architecture-notes.md) for the submission-ready architecture summary.
 
 ```mermaid
 flowchart LR
@@ -24,7 +24,7 @@ flowchart LR
 3. The web app sends the file to the Python document service.
 4. The document service uses Docling to extract text and returns it without storing the file.
 5. User reviews and edits extracted resume text.
-6. User pastes a target job description.
+6. User pastes a target job description or selects a supported career path, which is synthesized into a representative role profile.
 7. The web app retrieves relevant RAG chunks from Supabase `pgvector`.
 8. The web app calls OpenAI `gpt-4o-mini` server-side.
 9. The server validates the structured report.
@@ -42,7 +42,7 @@ Atlas uses two kinds of documents:
 
 ## Components
 
-- `apps/web`: sign-in, resume upload, extracted text review, job description entry, report rendering, roadmap quest progress, saved reports, and Ask Atlas.
+- `apps/web`: sign-in, resume upload, extracted-text review, target-role entry, report rendering, roadmap quest progress, saved reports, and Ask Atlas.
 - `services/knowledge/document-service`: FastAPI service that uses Docling to extract text from PDF/DOCX resumes.
 - `services/knowledge/rag`: offline ingestion and retrieval helpers for curated Markdown career guidance.
 - `supabase`: auth, user-owned reports/messages, row-level security, and `pgvector` retrieval.

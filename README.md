@@ -8,7 +8,7 @@ We aren't another complicated career-advice tool. Users answer a few career ques
 
 **Tagline:** Map your next career move.
 
-**v1 scope (AI Engineer first):** The analysis engine stays general and accepts any resume and any job description. For v1, the curated guidance, career-path presets, example copy, and capstone demo are all themed around AI / ML engineering readiness (AI Engineer, ML Engineer, LLM / Applied-AI Engineer, MLOps Engineer). The broader job market across all roles is a v2 direction.
+**v1 scope:** Atlas accepts any pasted job description. Initial career-path presets, example content, and curated guidance focus on AI, data, and adjacent early-career roles; the analysis flow does not reject another target role.
 
 ## How to Use Atlas
 
@@ -52,7 +52,7 @@ Progression mechanics (XP, readiness levels, rewards, and aura) are in-app recog
 | **Roadmap Quests** | Generate a 30/60/90-day quest roadmap with a "today's quests" view surfaced on top |
 | **Gamified Progression** | Award XP, readiness levels/ranks, rewards, and milestone badges as quests complete |
 | **Ask Atlas** | Report-specific follow-up chat using saved report context and RAG guidance |
-| **Curated RAG** | Retrieve trusted AI-engineering resume, portfolio, interview, and career guidance chunks |
+| **Curated RAG** | Retrieve trusted resume, portfolio, interview, and early-career guidance chunks |
 | **Markdown Export** | Copy or export generated reports for portfolio and submission use |
 
 ---

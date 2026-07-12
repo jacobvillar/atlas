@@ -8,6 +8,7 @@
 
 ## Architecture
 
+- [Architecture Notes](architecture/architecture-notes.md)
 - [System Overview](architecture/system-overview.md)
 - [Project Plan](architecture/project-plan.md)
 - [Pre-Implementation Architecture Review](architecture/pre-implementation-review.md)

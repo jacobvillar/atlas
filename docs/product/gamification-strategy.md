@@ -27,7 +27,7 @@ The product metaphor:
 Resume + target job -> readiness report -> personalized quest board -> level up toward role readiness
 ```
 
-v1 is themed around AI/ML engineering readiness (AI Engineer, ML Engineer, LLM/Applied-AI Engineer, MLOps Engineer). This is a soft scope: the analysis engine still accepts any resume and any job description; only the curated RAG guidance, career-path presets, example copy, and demo content are focused on AI engineering. Broad job market coverage across non-tech roles is v2.
+Atlas accepts any pasted job description. Initial career-path presets, example content, and curated RAG guidance focus on AI, data, and adjacent early-career roles; the analysis flow does not reject another target role.
 
 ## V1 Mechanics
 
@@ -71,7 +71,7 @@ These mechanics either compare users publicly or create anxiety-driven pressure,
 
 Possible later additions:
 
-- Broad job market coverage beyond AI/ML engineering roles.
+- A comprehensive preset library for every role and industry.
 - Due dates for quest phases.
 - Weekly check-in summary.
 - Shareable milestone card after the user explicitly opts in.

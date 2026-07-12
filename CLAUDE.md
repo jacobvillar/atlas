@@ -4,7 +4,7 @@
 
 Atlas is a Week 4 AI-powered web application capstone: a gamified career coach, roadmap, and tracker. It turns career preparation into an adventure. Authenticated users compare a resume against a target role, understand role readiness, and complete roadmap quests that let them level up in real life, build real skills, grow their professional "aura" (presence and reputation), and evolve toward their target role.
 
-v1 is themed around AI / ML engineering readiness (AI Engineer, ML Engineer, LLM / Applied-AI Engineer, MLOps Engineer). This is a soft scope: the analysis engine stays general and accepts any resume and any job description; only the curated content, RAG guidance, career-path presets, and demo center on AI engineering. The broad job market (all roles, non-tech) is explicitly v2.
+Atlas accepts a pasted job description for any role. Initial career-path presets, example content, and curated RAG guidance focus on AI, data, and adjacent early-career roles; do not reject another role simply because it is outside those presets.
 
 Tagline: "Map your next career move."
 
@@ -37,7 +37,7 @@ atlas/
 
 - MVP flow: sign in, upload or paste one resume, provide a target role via one of two input modes, generate one saved readiness report, complete quests to earn XP and level up, ask report-specific follow-up questions.
 - Two input modes feed one pipeline, with the job description primary: (1) paste a target job description (precise; hero flow), or (2) choose/enter a target role as a career path, and Atlas synthesizes a representative role profile stored as the report's job description text.
-- v1 target roles are AI / ML engineering roles (AI Engineer, ML Engineer, LLM / Applied-AI Engineer, MLOps Engineer). This is a soft scope: the analysis engine stays general and accepts any resume and job description; only curated RAG guidance, career-path presets, example copy, and the capstone demo are themed to AI engineering. The broad job market (all roles, non-tech) is v2. Do not hard-reject non-AI targets in code.
+- A pasted job description can describe any target role. Career-path presets and initial curated guidance focus on AI, data, and adjacent early-career roles; do not hard-reject another target in code.
 - Require Supabase authentication before analysis.
 - Support PDF and DOCX resume upload through the document service; paste input can remain as a fallback.
 - Generate a readiness dashboard with fit score, strengths, gaps, resume improvements, and a 30/60/90-day roadmap quest backbone.
