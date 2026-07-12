@@ -88,11 +88,25 @@ export async function POST(request: Request) {
     input.mode,
   );
 
+  // Verify the caller owns the referenced resume document before linking it.
+  // RLS scopes this lookup to the authenticated user, so a foreign id simply
+  // returns no row. Provenance is optional, so we silently null it rather
+  // than failing the request.
+  let resumeDocumentId: string | null = null;
+  if (input.resumeDocumentId) {
+    const { data: doc } = await supabase
+      .from("resume_documents")
+      .select("id")
+      .eq("id", input.resumeDocumentId)
+      .maybeSingle();
+    resumeDocumentId = doc?.id ?? null;
+  }
+
   const { data: report, error: insertError } = await supabase
     .from("career_reports")
     .insert({
       user_id: user.id,
-      resume_document_id: input.resumeDocumentId ?? null,
+      resume_document_id: resumeDocumentId,
       target_role: input.targetRole ?? null,
       job_description_text: jobDescriptionText,
       resume_evidence_json: output.resumeEvidence,

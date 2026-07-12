@@ -34,7 +34,7 @@ export function ActiveQuestsPreview({ reportId, quests }: ActiveQuestsPreviewPro
         >
           <span className="text-sm text-foreground">{quest.title}</span>
           <span className="shrink-0 rounded-full bg-background-tertiary px-2 py-0.5 text-xs font-medium text-foreground-muted">
-            {quest.xp} xp
+            {quest.xp ?? 0} xp
           </span>
         </li>
       ))}

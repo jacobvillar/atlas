@@ -114,7 +114,7 @@ export function reportToMarkdown(
       lines.push("_No quests in this phase._");
     } else {
       for (const quest of phaseQuests) {
-        lines.push(`- **${quest.title}** (${quest.xp} xp): ${quest.description}`);
+        lines.push(`- **${quest.title}** (${quest.xp ?? 0} xp): ${quest.description}`);
       }
     }
     lines.push("");

@@ -199,7 +199,7 @@ export function InteractiveRoadmap({
                                 {quest.title}
                               </label>
                               <span className="shrink-0 rounded-full bg-background-tertiary px-2 py-0.5 text-xs font-medium text-foreground-muted">
-                                {quest.xp} xp
+                                {quest.xp ?? 0} xp
                               </span>
                             </div>
                             <p className="mt-1 text-sm text-foreground-secondary">

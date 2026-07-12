@@ -4,6 +4,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/core/supabase/browser";
 
+function safeRedirectPath(path: string | undefined): string {
+  if (path && path.startsWith("/") && !path.startsWith("//") && !path.startsWith("/\\")) {
+    return path;
+  }
+  return "/dashboard";
+}
+
 const inputClass =
   "mt-1 w-full rounded-md border border-border-subtle bg-background px-3 py-2 text-sm text-foreground placeholder:text-foreground-muted focus:border-accent focus:outline-none";
 
@@ -31,7 +38,7 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
       return;
     }
 
-    router.push(redirectTo && redirectTo.startsWith("/") ? redirectTo : "/dashboard");
+    router.push(safeRedirectPath(redirectTo));
     router.refresh();
   }
 

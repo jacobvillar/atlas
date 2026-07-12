@@ -296,6 +296,7 @@ export function AnalysisForm() {
           onChange={(e) => {
             setResumeText(e.target.value);
             setFieldErrors((prev) => ({ ...prev, resumeText: undefined }));
+            setResumeDocumentId(null);
           }}
           placeholder="Paste your resume text here…"
           className={textareaClass}
