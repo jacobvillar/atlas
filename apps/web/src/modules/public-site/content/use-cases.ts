@@ -1,5 +1,7 @@
 export type UseCaseEntry = {
   title: string;
+  label: string;
+  mission: string;
   situation: string;
   input: string;
   output: string;
@@ -9,17 +11,21 @@ export type UseCaseEntry = {
 export const useCaseEntries: UseCaseEntry[] = [
   {
     title: "Fresh graduates",
+    label: "FIRST ROLE",
+    mission: "Translate potential into proof",
     situation:
       "You are preparing for your first professional role and are not sure how your coursework and internships line up with what employers expect.",
     input:
       "Your resume and the job description for a role you are targeting.",
     output:
-      "A readiness report showing your fit score, matched strengths, and the priority gaps to close before you apply.",
+      "A Career Campaign showing your matched strengths, priority gaps, and the first evidence mission to complete.",
     example:
-      "Example roadmap quest: \"Add a project bullet that quantifies the impact of your capstone data analysis.\"",
+      "First mission: add a project bullet that quantifies the impact of your capstone data analysis.",
   },
   {
     title: "Early-career professionals",
+    label: "NEXT STEP",
+    mission: "Make your growth visible",
     situation:
       "You have a year or two of experience and want a clear-eyed view of how ready you are for your next step up.",
     input: "Your current resume and a job description for the next role.",
@@ -30,17 +36,21 @@ export const useCaseEntries: UseCaseEntry[] = [
   },
   {
     title: "Career shifters",
+    label: "NEW DIRECTION",
+    mission: "Turn transferable work into a story",
     situation:
       "You are moving into a new field and need to translate training, projects, or certificates into a narrative that makes sense to a new industry.",
     input:
       "Your resume, including transferable experience, and the job description for the field you are shifting into.",
     output:
-      "Strengths that transfer well, gaps specific to the new field, and quests for building missing evidence.",
+      "Strengths that transfer well, field-specific gaps, and missions for building missing evidence.",
     example:
-      "Example roadmap quest: \"Complete a small portfolio project that demonstrates the core skill this role requires.\"",
+      "First mission: complete a small portfolio project that demonstrates the core skill this role requires.",
   },
   {
     title: "Bootcamp and post-grad learners",
+    label: "TURN TRAINING INTO TRACTION",
+    mission: "Convert coursework into proof",
     situation:
       "You have recently completed a bootcamp or post-graduate program and want to turn coursework into role-ready evidence.",
     input: "Your resume and a job description from your target track.",
@@ -51,6 +61,8 @@ export const useCaseEntries: UseCaseEntry[] = [
   },
   {
     title: "Advisors and mentors",
+    label: "GUIDED REVIEW",
+    mission: "Make the next conversation concrete",
     situation:
       "You are helping someone else review their career readiness and want a structured, shareable starting point for the conversation.",
     input:

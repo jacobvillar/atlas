@@ -11,45 +11,40 @@ const navLinks = [
 
 export function PublicNav() {
   return (
-    <header className="border-b border-border-subtle bg-background">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-4">
-        <Link href="/" className="flex items-center gap-2">
+    <header className="atlas-public-nav">
+      <div className="atlas-public-nav__inner">
+        <Link href="/" className="atlas-public-nav__brand">
           <Image
             src="/atlas-mark.svg"
             alt="Atlas"
-            width={32}
-            height={32}
+            width={36}
+            height={36}
             priority
           />
-          <span className="text-base font-semibold tracking-tight text-foreground">
-            Atlas
+          <span>
+            <strong>Atlas</strong>
+            <small>Career campaigns</small>
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav className="atlas-public-nav__links" aria-label="Primary navigation">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm text-foreground-secondary transition-colors hover:text-foreground"
+              className="atlas-public-nav__link"
             >
               {link.label}
             </Link>
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
-          <Link
-            href="/login"
-            className="text-sm font-medium text-foreground-secondary transition-colors hover:text-foreground"
-          >
+        <div className="atlas-public-nav__actions">
+          <Link href="/login" className="atlas-public-nav__login">
             Login
           </Link>
-          <Link
-            href="/signup"
-            className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-accent-hover"
-          >
-            Sign up for free
+          <Link href="/signup" className="atlas-public-nav__cta">
+            Begin campaign
           </Link>
         </div>
       </div>

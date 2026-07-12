@@ -9,13 +9,13 @@ const footerLinks = [
 
 export function PublicFooter() {
   return (
-    <footer className="border-t border-border-subtle bg-background-secondary">
-      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-8 text-sm text-foreground-secondary sm:flex-row sm:items-center sm:justify-between">
-        <p>
-          &copy; {new Date().getFullYear()} Atlas. Map your next career
-          move.
-        </p>
-        <nav className="flex flex-wrap gap-4">
+    <footer className="atlas-public-footer">
+      <div className="atlas-public-footer__inner">
+        <div>
+          <p className="atlas-public-footer__eyebrow">ATLAS CAREER CAMPAIGNS</p>
+          <p className="atlas-public-footer__message">Small missions. Real evidence. Your next move.</p>
+        </div>
+        <nav className="atlas-public-footer__links" aria-label="Footer navigation">
           {footerLinks.map((link) => (
             <Link
               key={link.href}
@@ -26,6 +26,7 @@ export function PublicFooter() {
             </Link>
           ))}
         </nav>
+        <p className="atlas-public-footer__copyright">&copy; {new Date().getFullYear()} Atlas</p>
       </div>
     </footer>
   );

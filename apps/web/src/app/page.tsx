@@ -5,18 +5,18 @@ import { PublicShell } from "@/modules/public-site";
 const workflowSteps = [
   {
     step: "01",
-    title: "Bring your resume",
-    description: "Upload a PDF or DOCX, then review the extracted text before analysis.",
+    title: "Start with your resume",
+    description: "Upload a PDF or DOCX. Check the text Atlas pulled out.",
   },
   {
     step: "02",
-    title: "Choose a target role",
-    description: "Paste one real job description you want to work toward next.",
+    title: "Add the job you want",
+    description: "Paste a real job description. That becomes your target.",
   },
   {
     step: "03",
-    title: "Launch your campaign",
-    description: "See matched evidence, priority gaps, and a role-specific mission path.",
+    title: "Take the next step",
+    description: "See what already fits, what is missing, and what to do first.",
   },
 ];
 
@@ -31,12 +31,12 @@ function CampaignPreview() {
     <div className="campaign-preview" aria-label="Example Atlas Career Campaign">
       <div className="campaign-preview__header">
         <div>
-          <p className="campaign-preview__eyebrow">YOUR CAREER CAMPAIGN</p>
+          <p className="campaign-preview__eyebrow">YOUR PLAN</p>
           <h2>Junior Product Analyst</h2>
         </div>
         <div className="campaign-preview__tier">
-          <span>Tier 2</span>
-          <strong>Builder</strong>
+          <span>Stage 2</span>
+          <strong>Build proof</strong>
         </div>
       </div>
 
@@ -46,8 +46,8 @@ function CampaignPreview() {
           <small>readiness</small>
         </div>
         <div>
-          <p className="campaign-preview__eyebrow">CAMPAIGN PROGRESS</p>
-          <p className="campaign-preview__progress-copy">2 of 7 missions complete</p>
+          <p className="campaign-preview__eyebrow">YOUR PROGRESS</p>
+          <p className="campaign-preview__progress-copy">2 of 7 steps done</p>
           <div className="campaign-preview__progress-track" aria-hidden="true">
             <span />
           </div>
@@ -57,16 +57,16 @@ function CampaignPreview() {
       <div className="campaign-preview__mission">
         <div className="campaign-preview__mission-topline">
           <span className="campaign-preview__status-dot" />
-          <span>Current mission</span>
-          <span>30 min</span>
+          <span>Do this next</span>
+          <span>About 30 min</span>
         </div>
         <h3>Add evidence for stakeholder reporting</h3>
         <p>
-          Turn one relevant project into a measurable resume bullet for this role.
+          Use one project to show the kind of reporting this role asks for.
         </p>
         <div className="campaign-preview__mission-footer">
-          <span>Evidence: revised bullet</span>
-          <span className="campaign-preview__start">Start mission</span>
+          <span>Outcome: one stronger bullet</span>
+          <span className="campaign-preview__start">Start</span>
         </div>
       </div>
 
@@ -75,17 +75,17 @@ function CampaignPreview() {
         <div className="campaign-preview__checkpoint campaign-preview__checkpoint--complete">
           <span>1</span>
           <strong>30 days</strong>
-          <small>Foundation</small>
+          <small>Get clear</small>
         </div>
         <div className="campaign-preview__checkpoint campaign-preview__checkpoint--active">
           <span>2</span>
           <strong>60 days</strong>
-          <small>Build proof</small>
+          <small>Show proof</small>
         </div>
         <div className="campaign-preview__checkpoint">
           <span>3</span>
           <strong>90 days</strong>
-          <small>Apply ready</small>
+          <small>Get ready</small>
         </div>
       </div>
     </div>
@@ -100,22 +100,22 @@ export default function Home() {
           <div className="atlas-hero__copy">
             <div className="atlas-hero__kicker">
               <Image src="/atlas-mark.svg" alt="" width={30} height={30} priority />
-              <span>AI career readiness coach</span>
+              <span>Career planning, made clearer</span>
             </div>
-            <h1>Turn your next role into a campaign worth completing.</h1>
+            <h1>Know what to do next.</h1>
             <p>
-              Atlas compares your resume with a real job description, then maps the gaps into clear missions, milestones, and evidence you can build.
+              Add your resume and a job you want. Atlas shows what already fits and gives you a short plan for the rest.
             </p>
             <div className="atlas-hero__actions">
               <Link href="/signup" className="atlas-button atlas-button--primary">
-                Start your campaign
+                See my next step
               </Link>
               <Link href="/use-cases" className="atlas-button atlas-button--quiet">
-                Explore use cases
+                See how it works
               </Link>
             </div>
             <p className="atlas-hero__note">
-              Guidance for your next move, never a hiring prediction.
+              A plan, not a promise.
             </p>
           </div>
           <CampaignPreview />
@@ -124,10 +124,10 @@ export default function Home() {
 
       <section className="atlas-section atlas-section--workflow">
         <div className="atlas-section__heading">
-          <p className="atlas-section__eyebrow">FROM RESUME TO MOMENTUM</p>
-          <h2>One role. One focused path forward.</h2>
+          <p className="atlas-section__eyebrow">A SIMPLE START</p>
+          <h2>One role. A clearer way forward.</h2>
           <p>
-            Atlas keeps the work concrete, so you always know what to do next and why it matters.
+            No generic checklist. Just the work that matters for the role you picked.
           </p>
         </div>
         <ol className="workflow-list">
@@ -144,21 +144,21 @@ export default function Home() {
       <section className="atlas-section atlas-section--promise">
         <div className="campaign-promise">
           <div>
-            <p className="atlas-section__eyebrow">A BETTER WAY TO USE AI CAREER ADVICE</p>
-            <h2>Less chat scroll. More visible progress.</h2>
+            <p className="atlas-section__eyebrow">WHY THIS FEELS DIFFERENT</p>
+            <h2>Less advice. More follow-through.</h2>
           </div>
           <div className="campaign-promise__points">
-            <p><strong>Current mission</strong> A single high-impact action, not an overwhelming list.</p>
-            <p><strong>Evidence first</strong> Each mission points to a resume bullet, work sample, practice answer, or outreach action.</p>
-            <p><strong>Private milestones</strong> Progress belongs to your campaign and never promises an interview or offer.</p>
+            <p><strong>One next step</strong> Start with the thing most worth doing, not a wall of suggestions.</p>
+            <p><strong>Something to show</strong> Each step ends with a stronger bullet, work sample, practice answer, or outreach note.</p>
+            <p><strong>Your own pace</strong> Your progress is private. It does not promise an interview or offer.</p>
           </div>
         </div>
       </section>
 
       <section className="atlas-section atlas-section--trust">
         <div className="atlas-section__heading">
-          <p className="atlas-section__eyebrow">BUILT FOR SENSITIVE CAREER WORK</p>
-          <h2>Your progress should feel personal, not exposed.</h2>
+          <p className="atlas-section__eyebrow">YOUR WORK STAYS YOURS</p>
+          <h2>Private by default.</h2>
         </div>
         <ul className="trust-list">
           {trustItems.map((item, index) => (
@@ -175,8 +175,8 @@ export default function Home() {
 
       <section className="atlas-final-cta">
         <div>
-          <p className="atlas-section__eyebrow">YOUR NEXT CHECKPOINT</p>
-          <h2>Map the move you want to make next.</h2>
+          <p className="atlas-section__eyebrow">READY WHEN YOU ARE</p>
+          <h2>Pick a role. Start there.</h2>
         </div>
         <Link href="/signup" className="atlas-button atlas-button--primary">
           Start for free

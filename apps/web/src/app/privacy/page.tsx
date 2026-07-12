@@ -4,70 +4,72 @@ import { PublicShell } from "@/modules/public-site";
 export const metadata: Metadata = {
   title: "Privacy — Atlas",
   description:
-    "Plain-language privacy commitments: Atlas does not store uploaded resume files or full raw resume text.",
+    "Plain-language privacy commitments for your Atlas Career Campaign.",
 };
 
 const commitments = [
   {
-    title: "We do not store uploaded resume files",
+    number: "01",
+    title: "Your resume file is not a trophy we keep",
     detail:
-      "Atlas processes your uploaded resume file to extract structured evidence, but the file itself is not stored in v1.",
+      "Atlas processes an uploaded PDF or DOCX to extract career evidence. The original file is discarded after processing in v1.",
   },
   {
-    title: "We do not store full raw resume text",
+    number: "02",
+    title: "Your full raw resume text is not stored",
     detail:
-      "Atlas does not save your complete raw resume text. We store resume metadata (like file name, type, and status) and structured resume evidence extracted during analysis, not a full text copy.",
+      "Atlas saves resume metadata and structured evidence for your report. It does not keep a full text copy of your resume.",
   },
   {
-    title: "Reports and Ask Atlas messages belong to you",
+    number: "03",
+    title: "Your Career Campaign stays in your account",
     detail:
-      "Your generated readiness report, roadmap quest progress, and Ask Atlas messages are saved to your account and are only readable and writable by you.",
+      "Your reports, mission progress, and Ask Atlas messages are private to your authenticated account.",
   },
   {
-    title: "Private resumes are not added to the shared knowledge base",
+    number: "04",
+    title: "Private work never trains the shared guidance library",
     detail:
-      "Atlas retrieves career guidance from a curated knowledge base for report generation and Ask Atlas. Your resume, job description, and Ask Atlas messages are never added to that shared knowledge base.",
+      "Resumes, job descriptions, reports, and chats are never added to Atlas's curated career-guidance knowledge base.",
   },
   {
-    title: "AI output is guidance, not a hiring decision",
+    number: "05",
+    title: "AI is a coach, not a hiring gatekeeper",
     detail:
-      "The fit score and roadmap are meant to help you prioritize next steps. They are not a hiring prediction, an interview guarantee, or a substitute for a recruiter's decision.",
-  },
-  {
-    title: "Remove sensitive personal data before uploading",
-    detail:
-      "Atlas only needs resume-relevant information and your target job description. Please remove highly sensitive personal data (such as government ID numbers) from your resume before uploading.",
+      "Atlas provides guidance to prioritize next steps. It does not predict interviews, offers, or a hiring decision.",
   },
 ];
 
 export default function PrivacyPage() {
   return (
     <PublicShell>
-      <section className="mx-auto max-w-4xl px-6 py-16">
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground">
-          Privacy
-        </h1>
-        <p className="mt-3 text-foreground-secondary">
-          This page explains, in plain language, what Atlas stores and does
-          not store. It is a product privacy page for the capstone MVP, not
-          a full legal privacy policy.
-        </p>
-
-        <div className="mt-10 space-y-6">
-          {commitments.map((commitment) => (
-            <div
-              key={commitment.title}
-              className="rounded-lg border border-border-subtle bg-background-secondary p-6"
-            >
-              <h2 className="text-base font-semibold text-foreground">
-                {commitment.title}
-              </h2>
-              <p className="mt-2 text-sm text-foreground-secondary">
-                {commitment.detail}
-              </p>
-            </div>
-          ))}
+      <section className="campaign-page-hero campaign-page-hero--privacy">
+        <div className="campaign-page-hero__inner">
+          <p className="campaign-page-hero__eyebrow">YOUR DATA, YOUR CAMPAIGN</p>
+          <h1>Privacy that is easy to understand.</h1>
+          <p>
+            Atlas handles career materials with a simple rule: keep only what helps your saved campaign work, and leave raw source documents behind.
+          </p>
         </div>
+      </section>
+
+      <section className="privacy-commitments">
+        <div className="privacy-commitments__intro">
+          <p className="campaign-section-label">THE ATLAS PRIVACY PROMISE</p>
+          <h2>Clear boundaries for sensitive career work.</h2>
+          <p>This is a plain-language product privacy page for the capstone MVP, not a full legal privacy policy.</p>
+        </div>
+        <ol className="privacy-commitments__list">
+          {commitments.map((commitment) => (
+            <li key={commitment.number}>
+              <span>{commitment.number}</span>
+              <div>
+                <h3>{commitment.title}</h3>
+                <p>{commitment.detail}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
       </section>
     </PublicShell>
   );

@@ -1,82 +1,74 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PublicShell } from "@/modules/public-site";
 
 export const metadata: Metadata = {
   title: "About — Atlas",
-  description:
-    "Why Atlas exists and how it turns a resume and job description into a structured, actionable career-readiness report.",
+  description: "Why Atlas turns role-fit advice into a Career Campaign.",
 };
+
+const principles = [
+  {
+    number: "01",
+    title: "Advice should become evidence",
+    copy: "A useful recommendation points to something you can show: a stronger resume bullet, a work sample, a practice answer, or a thoughtful outreach note.",
+  },
+  {
+    number: "02",
+    title: "Progress should be visible",
+    copy: "Career preparation gets overwhelming when every gap feels equal. Atlas turns the highest-value next step into a current mission with a clear finish line.",
+  },
+  {
+    number: "03",
+    title: "The user owns the move",
+    copy: "Atlas can organize evidence and suggest a path. It cannot promise a hiring outcome, and it never replaces your judgment or a recruiter’s decision.",
+  },
+];
 
 export default function AboutPage() {
   return (
     <PublicShell>
-      <section className="mx-auto max-w-3xl px-6 py-16">
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground">
-          About Atlas
-        </h1>
-
-        <div className="mt-8 space-y-8">
-          <div>
-            <h2 className="text-lg font-semibold text-foreground">
-              Why Atlas exists
-            </h2>
-            <p className="mt-2 text-sm leading-relaxed text-foreground-secondary">
-              Career advice is often generic, and it is hard to turn resume
-              feedback into a concrete plan. Atlas takes a resume and a
-              specific target job description and turns them into a
-              structured, evidence-based readiness report instead of vague
-              suggestions.
-            </p>
-          </div>
-
-          <div>
-            <h2 className="text-lg font-semibold text-foreground">
-              The problem
-            </h2>
-            <p className="mt-2 text-sm leading-relaxed text-foreground-secondary">
-              Job seekers get plenty of general career advice but rarely a
-              clear, role-specific view of where their resume stands
-              against a real job description, or what to actually do about
-              the gaps.
-            </p>
-          </div>
-
-          <div>
-            <h2 className="text-lg font-semibold text-foreground">
-              What we believe
-            </h2>
-            <p className="mt-2 text-sm leading-relaxed text-foreground-secondary">
-              Career guidance should be structured, private, and actionable.
-              A useful readiness report shows your fit score, your matched
-              strengths, your priority gaps, and a practical roadmap, not
-              just a generic tip list.
-            </p>
-          </div>
-
-          <div>
-            <h2 className="text-lg font-semibold text-foreground">
-              How Atlas works
-            </h2>
-            <p className="mt-2 text-sm leading-relaxed text-foreground-secondary">
-              After you sign in, you upload or paste a resume and paste a
-              target job description. Atlas extracts structured resume
-              evidence, compares it against the job description, and
-              generates a readiness report with a fit score, strengths,
-              gaps, resume improvements, and 30/60/90-day roadmap quests.
-              You can mark quests complete, track progress, and ask
-              report-specific follow-up questions through Ask Atlas.
-            </p>
-          </div>
-
-          <div>
-            <h2 className="text-lg font-semibold text-foreground">
-              Project note
-            </h2>
-            <p className="mt-2 text-sm leading-relaxed text-foreground-secondary">
-              Atlas is a post-graduate AI web application capstone project.
-            </p>
-          </div>
+      <section className="campaign-page-hero campaign-page-hero--lanes">
+        <div className="campaign-page-hero__inner">
+          <p className="campaign-page-hero__eyebrow">THE ATLAS POINT OF VIEW</p>
+          <h1>Career advice should feel like a path, not a pile of tips.</h1>
+          <p>
+            Atlas exists for the moment after you receive feedback and before you know what to do with it. We turn that uncertainty into a role-specific campaign you can actually work through.
+          </p>
         </div>
+      </section>
+
+      <section className="about-principles">
+        <div className="about-principles__intro">
+          <p className="campaign-section-label">WHAT ATLAS BELIEVES</p>
+          <h2>Make the next move smaller, clearer, and more yours.</h2>
+        </div>
+        <div className="about-principles__list">
+          {principles.map((principle) => (
+            <article key={principle.number}>
+              <span>{principle.number}</span>
+              <h3>{principle.title}</h3>
+              <p>{principle.copy}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="about-how">
+        <div>
+          <p className="campaign-section-label">HOW A CAMPAIGN WORKS</p>
+          <h2>Bring a resume. Choose a role. Build the proof.</h2>
+        </div>
+        <ol>
+          <li><span>1</span><p><strong>Review your evidence.</strong> Atlas extracts and organizes what your resume already shows.</p></li>
+          <li><span>2</span><p><strong>Compare it to a real role.</strong> Your job description creates the target, not a generic career template.</p></li>
+          <li><span>3</span><p><strong>Work the missions.</strong> Complete small, visible actions that strengthen your story for that role.</p></li>
+        </ol>
+        <Link href="/signup" className="atlas-button atlas-button--primary">Start your campaign</Link>
+      </section>
+
+      <section className="about-note">
+        <p>Atlas is built around a simple idea: a useful career plan should leave you with something clear to do and something real to show.</p>
       </section>
     </PublicShell>
   );

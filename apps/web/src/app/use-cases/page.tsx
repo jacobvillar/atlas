@@ -1,65 +1,79 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PublicShell, useCaseEntries } from "@/modules/public-site";
 
 export const metadata: Metadata = {
   title: "Use Cases — Atlas",
   description:
-    "See who Atlas helps: fresh graduates, early-career professionals, career shifters, learners, and advisors.",
+    "Find the Atlas Career Campaign that fits your next professional move.",
 };
 
 export default function UseCasesPage() {
   return (
     <PublicShell>
-      <section className="mx-auto max-w-6xl px-6 py-16">
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground">
-          Who Atlas helps
-        </h1>
-        <p className="mt-3 max-w-2xl text-foreground-secondary">
-          Atlas is built for the broader job market, not only tech roles.
-          Here is how different people use it.
-        </p>
+      <section className="campaign-page-hero campaign-page-hero--lanes">
+        <div className="campaign-page-hero__orb campaign-page-hero__orb--one" aria-hidden="true" />
+        <div className="campaign-page-hero__orb campaign-page-hero__orb--two" aria-hidden="true" />
+        <div className="campaign-page-hero__inner">
+          <p className="campaign-page-hero__eyebrow">CHOOSE YOUR STARTING POINT</p>
+          <h1>Every career move deserves a mission map.</h1>
+          <p>
+            Pick the path that feels closest to your next move, then turn your resume into evidence employers can see.
+          </p>
+          <div className="campaign-page-hero__stats" aria-label="Atlas campaign qualities">
+            <span><strong>1</strong> target role</span>
+            <span><strong>3</strong> campaign phases</span>
+            <span><strong>0</strong> empty advice lists</span>
+          </div>
+        </div>
+      </section>
 
-        <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          {useCaseEntries.map((useCase) => (
-            <div
-              key={useCase.title}
-              className="rounded-lg border border-border-subtle bg-background p-6"
-            >
-              <h2 className="text-lg font-semibold text-foreground">
-                {useCase.title}
-              </h2>
-              <p className="mt-2 text-sm text-foreground-secondary">
-                {useCase.situation}
-              </p>
+      <section className="campaign-lanes">
+        <div className="campaign-lanes__heading">
+          <p className="campaign-section-label">CAREER CAMPAIGN LANES</p>
+          <h2>Start with the story you already have.</h2>
+          <p>Each lane begins with the same core move: turn what you have done into the proof your target role needs.</p>
+        </div>
 
-              <dl className="mt-4 space-y-3 border-t border-border-subtle pt-4">
+        <div className="campaign-lanes__grid">
+          {useCaseEntries.map((useCase, index) => (
+            <article key={useCase.title} className="campaign-lane-card">
+              <div className="campaign-lane-card__topline">
+                <span className="campaign-lane-card__number">0{index + 1}</span>
+                <span className="campaign-lane-card__label">{useCase.label}</span>
+              </div>
+              <h2>{useCase.title}</h2>
+              <p className="campaign-lane-card__situation">{useCase.situation}</p>
+
+              <div className="campaign-lane-card__mission">
+                <span>Campaign objective</span>
+                <strong>{useCase.mission}</strong>
+              </div>
+
+              <dl className="campaign-lane-card__details">
                 <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-foreground-muted">
-                    Input
-                  </dt>
-                  <dd className="mt-1 text-sm text-foreground-secondary">
-                    {useCase.input}
-                  </dd>
+                  <dt>Bring</dt>
+                  <dd>{useCase.input}</dd>
                 </div>
                 <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-foreground-muted">
-                    Atlas returns
-                  </dt>
-                  <dd className="mt-1 text-sm text-foreground-secondary">
-                    {useCase.output}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-foreground-muted">
-                    Example
-                  </dt>
-                  <dd className="mt-1 text-sm text-foreground-secondary">
-                    {useCase.example}
-                  </dd>
+                  <dt>Unlock</dt>
+                  <dd>{useCase.output}</dd>
                 </div>
               </dl>
-            </div>
+
+              <p className="campaign-lane-card__example">{useCase.example}</p>
+            </article>
           ))}
+        </div>
+
+        <div className="campaign-lanes__cta">
+          <div>
+            <p className="campaign-section-label">NOT SURE WHICH LANE?</p>
+            <h2>Your target job is the compass.</h2>
+          </div>
+          <Link href="/signup" className="atlas-button atlas-button--primary">
+            Build my campaign
+          </Link>
         </div>
       </section>
     </PublicShell>

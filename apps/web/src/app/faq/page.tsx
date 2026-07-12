@@ -3,30 +3,29 @@ import { PublicShell, faqEntries } from "@/modules/public-site";
 
 export const metadata: Metadata = {
   title: "FAQ — Atlas",
-  description:
-    "Practical questions about how Atlas works, what it stores, and what to expect.",
+  description: "Practical questions about Atlas Career Campaigns.",
 };
 
 export default function FaqPage() {
   return (
     <PublicShell>
-      <section className="mx-auto max-w-3xl px-6 py-16">
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground">
-          Frequently asked questions
-        </h1>
-        <p className="mt-3 text-foreground-secondary">
-          Practical answers before you sign up.
-        </p>
-
-        <dl className="mt-10 divide-y divide-border-subtle border-t border-border-subtle">
-          {faqEntries.map((entry) => (
-            <div key={entry.question} className="py-6">
-              <dt className="text-base font-semibold text-foreground">
-                {entry.question}
-              </dt>
-              <dd className="mt-2 text-sm text-foreground-secondary">
-                {entry.answer}
-              </dd>
+      <section className="campaign-page-hero campaign-page-hero--faq">
+        <div className="campaign-page-hero__inner">
+          <p className="campaign-page-hero__eyebrow">FIELD GUIDE</p>
+          <h1>Everything you need before starting.</h1>
+          <p>Short answers about how Atlas works, what it stores, and what a Career Campaign can actually help you do.</p>
+        </div>
+      </section>
+      <section className="atlas-faq">
+        <div className="atlas-faq__intro">
+          <p className="campaign-section-label">COMMON QUESTIONS</p>
+          <h2>Know the map before you take the first step.</h2>
+        </div>
+        <dl className="atlas-faq__list">
+          {faqEntries.map((entry, index) => (
+            <div key={entry.question}>
+              <dt><span>0{index + 1}</span>{entry.question}</dt>
+              <dd>{entry.answer}</dd>
             </div>
           ))}
         </dl>
