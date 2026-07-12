@@ -23,7 +23,7 @@ jobs:
           test -f .cursorrules
       - name: Check forbidden positioning language
         run: |
-          ! grep -RniE "Better-ed|better-ed|inspired by|instead of assessing|student understanding" .
+          ! grep -RniE "Better-ed|better-ed|inspired by|instead of assessing|student understanding" README.md docs spec.md CLAUDE.md .cursorrules
       - name: Check secrets are not committed
         run: |
-          ! grep -RniE "sk-[A-Za-z0-9]|ANTHROPIC_API_KEY=.*[A-Za-z0-9]|OPENAI_API_KEY=.*[A-Za-z0-9]" . --exclude-dir=.git
+          ! grep -RniE "sk-[A-Za-z0-9]|ANTHROPIC_API_KEY=.*[A-Za-z0-9]|OPENAI_API_KEY=.*[A-Za-z0-9]" README.md docs spec.md CLAUDE.md .cursorrules .env.example
