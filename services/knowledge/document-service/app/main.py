@@ -4,15 +4,17 @@ Privacy note: never log raw resume text or file contents. Only log
 non-sensitive metadata (e.g. file name, file type, byte size) if needed.
 """
 
+import hmac
 import os
 import tempfile
 from pathlib import Path
 
 from fastapi import FastAPI, Header, HTTPException, UploadFile
+from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import JSONResponse
 
 from app.extraction import extract_resume
-from app.validation import validate_upload
+from app.validation import validate_content, validate_upload
 
 app = FastAPI(title="Atlas Document Service")
 
@@ -33,27 +35,39 @@ async def extract_resume_endpoint(
             status_code=503, content={"detail": "Service not configured"}
         )
 
-    if x_api_key != expected_api_key:
+    # Timing-safe comparison: a naive `!=` leaks key bytes via response
+    # timing. compare_digest runs in constant time regardless of match.
+    if not hmac.compare_digest(x_api_key or "", expected_api_key):
         raise HTTPException(status_code=401, detail="Unauthorized")
 
     content = await file.read()
 
     max_mb = int(os.getenv("MAX_UPLOAD_MB", "5"))
+    content_type = file.content_type or ""
     try:
         validate_upload(
-            content_type=file.content_type or "",
+            content_type=content_type,
             size_bytes=len(content),
             max_mb=max_mb,
         )
+        validate_content(content, content_type)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
     suffix = Path(file.filename or "").suffix
 
-    with tempfile.NamedTemporaryFile(delete=True, suffix=suffix) as tmp:
+    # delete=False + explicit unlink in finally: NamedTemporaryFile(delete=True)
+    # re-opened by path inside the with-block is POSIX-only (Windows can't
+    # open an already-open delete-on-close temp file by name).
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
+    try:
         tmp.write(content)
-        tmp.flush()
-        extraction = extract_resume(Path(tmp.name))
+        tmp.close()
+        # Run blocking Docling extraction off the event loop so it doesn't
+        # stall /api/health and other concurrent requests during conversion.
+        extraction = await run_in_threadpool(extract_resume, Path(tmp.name))
+    finally:
+        Path(tmp.name).unlink(missing_ok=True)
 
     return {
         "fileName": file.filename,
